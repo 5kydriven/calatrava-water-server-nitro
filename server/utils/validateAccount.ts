@@ -1,6 +1,6 @@
 import { getFirestore } from 'firebase-admin/firestore';
 
-export default async function validateAccount(payload: string) {
+export default async function validateAccount(payload: number) {
 	const db = getFirestore();
 
 	const residentDoc = await db
