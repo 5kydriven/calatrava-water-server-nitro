@@ -8,22 +8,23 @@ export default defineEventHandler(async (event: H3Event) => {
 
 	try {
 		let query = db.collection('residents').orderBy('fullname', 'asc');
+		const countSnap = await query.count().get();
 
 		if (address) {
 			query = query.where('address', '==', address);
 		}
 
 		if (q) {
-			query = query.where('searchKeywords', 'array-contains', q);
+			query = query.where('searchKeywords', 'array-contains', q).limit(3);
+		} else {
+			query = query.limit(10);
 		}
 
 		if (offset) {
 			query = query.offset(Number(offset));
 		}
 
-		const countSnap = await query.count().get();
-
-		const residentsSnapshot = await query.limit(10).get();
+		const residentsSnapshot = await query.get();
 		const residents = residentsSnapshot.docs.map((doc) => ({
 			uid: doc.id,
 			...doc.data(),

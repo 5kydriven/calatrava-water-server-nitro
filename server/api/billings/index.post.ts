@@ -25,47 +25,49 @@ export default defineEventHandler(async (event: H3Event) => {
 	}
 
 	try {
-		const dataArray = Array.isArray(body) ? body : [body];
+		// const dataArray = Array.isArray(body) ? body : [body];
 
-		const batch = db.batch();
-		const residentsRef = db.collection('residents');
+		// const batch = db.batch();
+		// const residentsRef = db.collection('residents');
 
-		const billingIds: { uid: string; accountno: string }[] = [];
+		// const billingIds: { uid: string; accountno: string }[] = [];
 
-		for (const item of dataArray) {
-			const { address, fullname, accountno, ...billingData } = item;
+		// for (const item of dataArray) {
+		// 	const { address, fullname, accountno, ...billingData } = item;
 
-			const residentRef = residentsRef.doc(accountno);
+		// 	const residentRef = residentsRef.doc(accountno);
 
-			batch.set(
-				residentRef,
-				{
-					address: address.toLowerCase(),
-					fullname: fullname.toLowerCase(),
-					createdAt: Timestamp.now(),
-					classification: 'residential',
-					searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
-				},
-				{ merge: true },
-			);
+		// 	batch.set(
+		// 		residentRef,
+		// 		{
+		// 			address: address.toLowerCase(),
+		// 			fullname: fullname.toLowerCase(),
+		// 			createdAt: Timestamp.now(),
+		// 			classification: 'residential',
+		// 			searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
+		// 		},
+		// 		{ merge: true },
+		// 	);
 
-			const billingRef = residentRef.collection('billings').doc();
-			billingIds.push({ uid: billingRef.id, accountno });
+		// 	const billingRef = residentRef.collection('billings').doc();
+		// 	billingIds.push({ uid: billingRef.id, accountno });
 
-			batch.set(billingRef, {
-				...billingData,
-				accountno,
-				createdAt: Timestamp.now(),
-			});
-		}
+		// 	batch.set(billingRef, {
+		// 		...billingData,
+		// 		accountno,
+		// 		createdAt: Timestamp.now(),
+		// 	});
+		// }
 
-		await batch.commit();
+		// await batch.commit();
 
-		return successResponse({
-			message: 'Billings added successfully under residents.',
-			data: billingIds,
-			total: billingIds.length,
-		});
+		// return successResponse({
+		// 	message: 'Billings added successfully under residents.',
+		// 	data: billingIds,
+		// 	total: billingIds.length,
+		// });
+
+		console.log(body);
 	} catch (error: any) {
 		console.log(error);
 		return errorResponse(error);
