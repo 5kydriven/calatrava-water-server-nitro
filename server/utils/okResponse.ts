@@ -9,7 +9,7 @@ export default function successResponse<T = any>({
 		statusCode: 200,
 		statusMessage: 'ok',
 		message,
-		data,
 		total,
+		data,
 	};
 }

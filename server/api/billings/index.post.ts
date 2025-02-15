@@ -40,11 +40,11 @@ export default defineEventHandler(async (event: H3Event) => {
 			batch.set(
 				residentRef,
 				{
-					address,
-					fullname,
+					address: address.toLowerCase(),
+					fullname: fullname.toLowerCase(),
 					createdAt: Timestamp.now(),
 					classification: 'residential',
-					searchKeywords: generateSearchKeywords(fullname),
+					searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
 				},
 				{ merge: true },
 			);
@@ -67,6 +67,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			total: billingIds.length,
 		});
 	} catch (error: any) {
+		console.log(error);
 		return errorResponse(error);
 	}
 });

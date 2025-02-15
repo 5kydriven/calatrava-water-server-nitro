@@ -4,7 +4,7 @@ import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { address, q } = getQuery(event);
+	const { address, q, offset } = getQuery(event);
 
 	try {
 		let query = db.collection('residents').orderBy('fullname', 'asc');
@@ -15,6 +15,10 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		if (q) {
 			query = query.where('searchKeywords', 'array-contains', q);
+		}
+
+		if (offset) {
+			query = query.offset(Number(offset));
 		}
 
 		const countSnap = await query.count().get();
