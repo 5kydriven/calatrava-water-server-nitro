@@ -4,7 +4,7 @@ import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { address, q } = getQuery(event);
+	const { q, month, active } = getQuery(event);
 
 	try {
 		const countSnap = await db.collection('residents').count().get();

@@ -64,6 +64,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		return successResponse({
 			message: 'Billings added successfully under residents.',
 			data: billingIds,
+			total: billingIds.length,
 		});
 	} catch (error: any) {
 		return errorResponse(error);

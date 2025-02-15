@@ -19,7 +19,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const countSnap = await query.count().get();
 
-		// Fetch only 10 residents
 		const residentsSnapshot = await query.limit(10).get();
 		const residents = residentsSnapshot.docs.map((doc) => ({
 			uid: doc.id,
