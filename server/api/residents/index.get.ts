@@ -11,7 +11,8 @@ export default defineEventHandler(async (event: H3Event) => {
 		const countSnap = await query.count().get();
 
 		if (address) {
-			query = query.where('address', '==', address);
+			const addressArray = Array.isArray(address) ? address : [address];
+			query = query.where('address', 'in', addressArray);
 		}
 
 		if (q) {
