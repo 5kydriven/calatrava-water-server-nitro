@@ -4,7 +4,7 @@ import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { q, month, active, offset } = getQuery(event);
+	const { q, month, active, offset = 0 } = getQuery(event);
 
 	if (!month) {
 		throw createError({
@@ -13,6 +13,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			message: 'Month is required',
 		});
 	}
+
 	try {
 		const selectedDate = new Date(month.toString());
 
@@ -44,12 +45,18 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const countSnap = await billingsQuery.count().get();
 
-		billingsQuery = q
-			? billingsQuery
-					.where('accountno', '>=', q)
-					.where('accountno', '<=', q)
-					.limit(3)
-			: billingsQuery.limit(10);
+		if (q) {
+			billingsQuery = billingsQuery
+				.where('accountno', '>=', q)
+				.where('accountno', '<=', q)
+				.limit(3);
+		} else {
+			billingsQuery = billingsQuery.limit(10);
+		}
+
+		if (offset) {
+			billingsQuery = billingsQuery.offset(Number(offset));
+		}
 
 		const billingsSnapshot = await billingsQuery.get();
 
