@@ -54,6 +54,8 @@ export default defineEventHandler(async (event: H3Event) => {
 
 			batch.set(billingRef, {
 				...billingData,
+				address: address.toLowerCase(),
+				fullname: fullname.toLowerCase(),
 				accountno,
 				createdAt: Timestamp.now(),
 			});

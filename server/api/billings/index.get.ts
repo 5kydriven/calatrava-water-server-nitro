@@ -4,16 +4,29 @@ import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { q, month, active } = getQuery(event);
+	const { q, month, active, offset } = getQuery(event);
 
+	if (!month) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: 'bad request',
+			message: 'Month is required',
+		});
+	}
 	try {
-		const countSnap = await db.collection('residents').count().get();
+		const selectedDate = new Date(month.toString());
 
-		const now = new Date();
-		const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+		if (isNaN(selectedDate.getTime())) {
+			throw new Error('Invalid month format.');
+		}
+
+		const selectedYear = selectedDate.getFullYear();
+		const selectedMonth = selectedDate.getMonth();
+
+		const startOfMonth = new Date(selectedYear, selectedMonth, 1);
 		const endOfMonth = new Date(
-			now.getFullYear(),
-			now.getMonth() + 1,
+			selectedYear,
+			selectedMonth + 1,
 			0,
 			23,
 			59,
@@ -24,13 +37,23 @@ export default defineEventHandler(async (event: H3Event) => {
 		const startTimestamp = Timestamp.fromDate(startOfMonth);
 		const endTimestamp = Timestamp.fromDate(endOfMonth);
 
-		const billingsQuery = db
+		let billingsQuery = db
 			.collectionGroup('billings')
 			.where('createdAt', '>=', startTimestamp)
 			.where('createdAt', '<=', endTimestamp);
-		const querySnapshot = await billingsQuery.get();
 
-		const billings = querySnapshot.docs.map((doc) => ({
+		const countSnap = await billingsQuery.count().get();
+
+		billingsQuery = q
+			? billingsQuery
+					.where('accountno', '>=', q)
+					.where('accountno', '<=', q)
+					.limit(3)
+			: billingsQuery.limit(10);
+
+		const billingsSnapshot = await billingsQuery.get();
+
+		const billings = billingsSnapshot.docs.map((doc) => ({
 			uid: doc.id,
 			...doc.data(),
 		}));
