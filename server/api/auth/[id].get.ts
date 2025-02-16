@@ -6,7 +6,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	const param = getRouterParam(event, 'id');
 	const auth = getAuth();
 	try {
-		const isValid = await validateAccount(Number(param));
+		const isValid = await validateAccount(param);
 		if (!isValid) {
 			throw createError({
 				statusCode: 401,

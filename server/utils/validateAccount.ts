@@ -1,12 +1,9 @@
 import { getFirestore } from 'firebase-admin/firestore';
 
-export default async function validateAccount(payload: number) {
+export default async function validateAccount(uid: string) {
 	const db = getFirestore();
 
-	const residentDoc = await db
-		.collection('residents')
-		.where('accountNumber', '==', payload)
-		.get();
+	const residentDoc = await db.collection('residents').doc(uid).get();
 
-	return !residentDoc.empty;
+	return residentDoc.exists;
 }
