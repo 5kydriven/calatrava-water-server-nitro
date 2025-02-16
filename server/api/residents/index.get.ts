@@ -26,9 +26,10 @@ export default defineEventHandler(async (event: H3Event) => {
 		}
 
 		const residentsSnapshot = await query.get();
-		const residents = residentsSnapshot.docs.map((doc) => ({
+		const residents = residentsSnapshot.docs.map((doc, index) => ({
 			uid: doc.id,
 			...doc.data(),
+			id: index,
 		}));
 
 		return okResponse({ data: residents, total: countSnap.data().count });
