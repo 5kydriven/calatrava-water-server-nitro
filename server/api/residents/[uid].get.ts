@@ -5,7 +5,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
 	const uid = getRouterParam(event, 'uid');
 	try {
-		const residentRef = db.collection('residents').doc('uid');
+		const residentRef = db.collection('residents').doc(uid);
 		const residentSnapshot = await residentRef.get();
 		const residentBillings = await residentRef
 			.collection('billings')
