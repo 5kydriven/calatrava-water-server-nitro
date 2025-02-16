@@ -60,9 +60,10 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const billingsSnapshot = await billingsQuery.get();
 
-		const billings = billingsSnapshot.docs.map((doc) => ({
+		const billings = billingsSnapshot.docs.map((doc, index) => ({
 			uid: doc.id,
 			...doc.data(),
+			id: index + (Number(offset) + 1),
 		}));
 
 		return okResponse({ data: billings, total: countSnap.data().count });
