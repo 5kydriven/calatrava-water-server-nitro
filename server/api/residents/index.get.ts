@@ -4,7 +4,7 @@ import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { address, q, offset } = getQuery(event);
+	const { address, q, offset = 0 } = getQuery(event);
 
 	try {
 		let query = db.collection('residents').orderBy('fullname', 'asc');
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const residents = residentsSnapshot.docs.map((doc, index) => ({
 			uid: doc.id,
 			...doc.data(),
-			id: index,
+			id: index + (Number(offset) + 1),
 		}));
 
 		return okResponse({ data: residents, total: countSnap.data().count });
