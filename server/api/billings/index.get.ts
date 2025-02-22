@@ -72,7 +72,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const billings = billingsSnapshot.docs.map((doc, index) => {
 			const data = doc.data();
-			const usage = data.usage || 0;
+			const usage = data.averageuse || 0;
 
 			const bill = calculateWaterBill(usage, defaultTiers);
 
