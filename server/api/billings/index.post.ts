@@ -57,6 +57,7 @@ export default defineEventHandler(async (event: H3Event) => {
 				address: address.toLowerCase(),
 				fullname: fullname.toLowerCase(),
 				accountno,
+				paymentReceipt: null,
 				status: 'unpaid',
 				createdAt: Timestamp.now(),
 			});
