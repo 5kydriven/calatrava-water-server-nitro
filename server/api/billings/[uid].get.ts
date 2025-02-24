@@ -25,7 +25,8 @@ export default defineEventHandler(async (event: H3Event) => {
 		const countSnapshot = await billingsRef.count().get();
 
 		const billingsSnapshot = await billingsRef.get();
-		const billings = billingsSnapshot.docs.map((doc, index) => {
+
+		const billings = billingsSnapshot.docs.map((doc) => {
 			const data = doc.data();
 			const usage = data.averageuse || 0;
 
