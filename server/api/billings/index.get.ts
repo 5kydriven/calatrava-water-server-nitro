@@ -25,7 +25,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			{ min: 51, max: Infinity, rate: 18 },
 		];
 
-		const selectedDate = new Date(month.toString());
+		const selectedDate = new Date(Date.parse(month.toString()));
 
 		if (isNaN(selectedDate.getTime())) {
 			throw new Error('Invalid month format.');
@@ -34,15 +34,12 @@ export default defineEventHandler(async (event: H3Event) => {
 		const selectedYear = selectedDate.getFullYear();
 		const selectedMonth = selectedDate.getMonth();
 
-		const startOfMonth = new Date(selectedYear, selectedMonth, 1);
+		// Explicitly set to the start of the month without timezone shifts
+		const startOfMonth = new Date(
+			Date.UTC(selectedYear, selectedMonth, 1, 0, 0, 0, 0),
+		);
 		const endOfMonth = new Date(
-			selectedYear,
-			selectedMonth + 1,
-			0,
-			23,
-			59,
-			59,
-			999,
+			Date.UTC(selectedYear, selectedMonth + 1, 0, 23, 59, 59, 999),
 		);
 
 		const startTimestamp = Timestamp.fromDate(startOfMonth);
