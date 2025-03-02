@@ -44,6 +44,7 @@ export default defineEventHandler(async (event: H3Event) => {
 					fullname: fullname.toLowerCase(),
 					createdAt: Timestamp.now(),
 					classification: 'residential',
+					NotificationToken: null,
 					searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
 				},
 				{ merge: true },
