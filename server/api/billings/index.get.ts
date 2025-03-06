@@ -34,12 +34,15 @@ export default defineEventHandler(async (event: H3Event) => {
 		const selectedYear = selectedDate.getFullYear();
 		const selectedMonth = selectedDate.getMonth();
 
-		// Explicitly set to the start of the month without timezone shifts
-		const startOfMonth = new Date(
-			Date.UTC(selectedYear, selectedMonth, 1, 0, 0, 0, 0),
-		);
+		const startOfMonth = new Date(selectedYear, selectedMonth, 1, 0, 0, 0, 0);
 		const endOfMonth = new Date(
-			Date.UTC(selectedYear, selectedMonth + 1, 0, 23, 59, 59, 999),
+			selectedYear,
+			selectedMonth + 1,
+			0,
+			23,
+			59,
+			59,
+			999,
 		);
 
 		const startTimestamp = Timestamp.fromDate(startOfMonth);
@@ -48,7 +51,11 @@ export default defineEventHandler(async (event: H3Event) => {
 		let billingsQuery = db
 			.collectionGroup('billings')
 			.where('createdAt', '>=', startTimestamp)
-			.where('createdAt', '<=', endTimestamp);
+			.where(
+				'createdAt',
+				'<=',
+				Timestamp.fromMillis(endTimestamp.toMillis() + 1),
+			);
 
 		const countSnap = await billingsQuery.count().get();
 
