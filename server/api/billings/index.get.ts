@@ -1,6 +1,7 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
 import calculateWaterBill from '~/utils/calculateWaterBill';
+import calculateWaterCost from '~/utils/calculateWaterCost';
 import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const startTimestamp = Timestamp.fromDate(startOfMonth);
 		const endTimestamp = Timestamp.fromDate(endOfMonth);
-
+		console.log('start: ', startTimestamp, 'end: ', endTimestamp);
 		let billingsQuery = db
 			.collectionGroup('billings')
 			.where('createdAt', '>=', startTimestamp)
@@ -70,21 +71,11 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const billingsSnapshot = await billingsQuery.get();
 
-		const billings = billingsSnapshot.docs.map((doc, index) => {
-			const data = doc.data();
-			const usage = data.averageuse || 0;
-
-			const bill = calculateWaterBill(usage, defaultTiers);
-
-			return {
-				uid: doc.id,
-				...data,
-				id: index + (Number(offset) + 1),
-				waterCharge: bill.waterCharge,
-				environmentalFee: bill.environmentalFee,
-				totalBill: bill.totalBill,
-			};
-		});
+		const billings = billingsSnapshot.docs.map((doc, index) => ({
+			uid: doc.id,
+			...doc.data(),
+			id: index + (Number(offset) + 1),
+		}));
 
 		return okResponse({ data: billings, total: countSnap.data().count });
 	} catch (error: any) {

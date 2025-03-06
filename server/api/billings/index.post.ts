@@ -1,5 +1,6 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
+import calculateWaterCost from '~/utils/calculateWaterCost';
 import errorResponse from '~/utils/errorResponse';
 import successResponse from '~/utils/okResponse';
 import generateSearchKeywords from '~/utils/searchKeyword';
@@ -25,6 +26,15 @@ export default defineEventHandler(async (event: H3Event) => {
 	}
 
 	try {
+		const defaultTiers = [
+			{ min: 0, max: 10, rate: 75, fixed: true },
+			{ min: 11, max: 20, rate: 12 },
+			{ min: 21, max: 30, rate: 13.5 },
+			{ min: 31, max: 40, rate: 15 },
+			{ min: 41, max: 50, rate: 16.5 },
+			{ min: 51, max: Infinity, rate: 18 },
+		];
+
 		const dataArray = Array.isArray(body) ? body : [body];
 
 		const batch = db.batch();
@@ -33,7 +43,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const billingIds: { uid: string; accountno: string }[] = [];
 
 		for (const item of dataArray) {
-			const { address, fullname, accountno, ...billingData } = item;
+			const { address, fullname, accountno, averageuse, ...billingData } = item;
 
 			const residentRef = residentsRef.doc(accountno);
 
@@ -53,11 +63,16 @@ export default defineEventHandler(async (event: H3Event) => {
 			const billingRef = residentRef.collection('billings').doc();
 			billingIds.push({ uid: billingRef.id, accountno });
 
+			const bill = calculateWaterBill(averageuse, defaultTiers);
+
 			batch.set(billingRef, {
 				...billingData,
 				address: address.toLowerCase(),
 				fullname: fullname.toLowerCase(),
 				accountno,
+				waterCharge: calculateWaterCost(averageuse),
+				totalBill: calculateWaterCost(averageuse),
+				environmentalFee: bill.environmentalFee,
 				paymentReceipt: null,
 				status: 'unpaid',
 				createdAt: Timestamp.now(),
