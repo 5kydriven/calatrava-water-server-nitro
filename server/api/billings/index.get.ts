@@ -34,15 +34,11 @@ export default defineEventHandler(async (event: H3Event) => {
 		const selectedYear = selectedDate.getFullYear();
 		const selectedMonth = selectedDate.getMonth();
 
-		const startOfMonth = new Date(selectedYear, selectedMonth, 1, 0, 0, 0, 0);
+		const startOfMonth = new Date(
+			Date.UTC(selectedYear, selectedMonth, 1, 0, 0, 0, 0),
+		);
 		const endOfMonth = new Date(
-			selectedYear,
-			selectedMonth + 1,
-			0,
-			23,
-			59,
-			59,
-			999,
+			Date.UTC(selectedYear, selectedMonth + 1, 0, 23, 59, 59, 999),
 		);
 
 		const startTimestamp = Timestamp.fromDate(startOfMonth);
