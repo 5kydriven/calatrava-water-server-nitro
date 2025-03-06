@@ -70,6 +70,7 @@ export default defineEventHandler(async (event: H3Event) => {
 				address: address.toLowerCase(),
 				fullname: fullname.toLowerCase(),
 				accountno,
+				averageuse,
 				waterCharge: calculateWaterCost(averageuse),
 				totalBill: calculateWaterCost(averageuse),
 				environmentalFee: bill.environmentalFee,
