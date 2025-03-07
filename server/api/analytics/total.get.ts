@@ -10,8 +10,9 @@ import errorResponse from '~/utils/errorResponse';
 export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const db = getFirestore();
-
 		const now = new Date();
+
+		// Define start and end of the month
 		const startOfMonth = Timestamp.fromDate(
 			new Date(now.getFullYear(), now.getMonth(), 1),
 		);
@@ -19,40 +20,33 @@ export default defineEventHandler(async (event: H3Event) => {
 			new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999),
 		);
 
-		const residentsSnap = await db.collection('residents').count().get();
-		const billingsSnap = await db.collectionGroup('billings').count().get();
+		// Get resident and billing counts
+		const [residentsSnap, billingsSnap] = await Promise.all([
+			db.collection('residents').count().get(),
+			db.collectionGroup('billings').count().get(),
+		]);
 
-		let totalIncome = 0;
-		let currentMonthIncome = 0;
+		// Aggregate total income across all billings
+		const totalBillingSnap = await db
+			.collectionGroup('billings')
+			.aggregate({ income: AggregateField.sum('totalBill') })
+			.get();
 
-		const residentsSnapshot = await db.collection('residents').get();
+		// Aggregate current month's income across all billings
+		const currentMonthBillingSnap = await db
+			.collectionGroup('billings')
+			.where('createdAt', '>=', startOfMonth)
+			.where('createdAt', '<=', endOfMonth)
+			.aggregate({ income: AggregateField.sum('totalBill') })
+			.get();
 
-		for (const residentDoc of residentsSnapshot.docs) {
-			const billingsRef = db
-				.collection('residents')
-				.doc(residentDoc.id)
-				.collection('billings');
-
-			const totalBillingSnap = await billingsRef
-				.aggregate({ income: AggregateField.sum('totalBill') })
-				.get();
-			totalIncome += totalBillingSnap.data()?.income || 0;
-
-			const monthlyBillingSnap = await billingsRef
-				.where('createdAt', '>=', startOfMonth)
-				.where('createdAt', '<=', endOfMonth)
-				.aggregate({ income: AggregateField.sum('totalBill') })
-				.get();
-
-			currentMonthIncome += monthlyBillingSnap.data()?.income || 0;
-		}
-
+		// Return optimized response
 		return successResponse({
 			data: {
-				residents: residentsSnap.data().count,
-				bills: billingsSnap.data().count,
-				totalIncome,
-				currentMonthIncome,
+				residents: residentsSnap.data()?.count || 0,
+				bills: billingsSnap.data()?.count || 0,
+				totalIncome: totalBillingSnap.data()?.income || 0,
+				currentMonthIncome: currentMonthBillingSnap.data()?.income || 0,
 			},
 		});
 	} catch (error: any) {
