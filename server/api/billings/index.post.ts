@@ -39,6 +39,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const batch = db.batch();
 		const residentsRef = db.collection('residents');
+		const billingsRef = db.collection('billings');
 
 		const billingIds: { uid: string; accountno: string }[] = [];
 
@@ -46,7 +47,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			const { address, fullname, accountno, averageuse, ...billingData } = item;
 
 			const residentRef = residentsRef.doc(accountno);
-
 			batch.set(
 				residentRef,
 				{
@@ -60,12 +60,12 @@ export default defineEventHandler(async (event: H3Event) => {
 				{ merge: true },
 			);
 
-			const billingRef = residentRef.collection('billings').doc();
-			billingIds.push({ uid: billingRef.id, accountno });
+			const subBillingRef = residentRef.collection('billings').doc();
+			billingIds.push({ uid: subBillingRef.id, accountno });
 
 			const bill = calculateWaterBill(averageuse, defaultTiers);
 
-			batch.set(billingRef, {
+			const billingPayload = {
 				...billingData,
 				address: address.toLowerCase(),
 				fullname: fullname.toLowerCase(),
@@ -77,13 +77,22 @@ export default defineEventHandler(async (event: H3Event) => {
 				paymentReceipt: null,
 				status: 'unpaid',
 				createdAt: Timestamp.now(),
+			};
+
+			batch.set(subBillingRef, billingPayload);
+
+			const topLevelBillingRef = billingsRef.doc();
+			batch.set(topLevelBillingRef, {
+				...billingPayload,
+				residentId: accountno,
 			});
 		}
 
 		await batch.commit();
 
 		return successResponse({
-			message: 'Billings added successfully under residents.',
+			message:
+				'Billings added successfully under residents and top-level billings.',
 			data: billingIds,
 			total: billingIds.length,
 		});
