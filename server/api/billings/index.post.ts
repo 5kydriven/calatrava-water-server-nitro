@@ -91,8 +91,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		await batch.commit();
 
 		return successResponse({
-			message:
-				'Billings added successfully under residents and top-level billings.',
+			message: 'Billings uploaded successfully',
 			data: billingIds,
 			total: billingIds.length,
 		});
