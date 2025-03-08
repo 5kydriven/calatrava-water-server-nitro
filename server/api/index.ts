@@ -5,15 +5,16 @@ export default defineEventHandler((event: H3Event) => {
 	const apis = [
 		{
 			path: '/api/billings',
-			methods: ['index.post', '[uid].put', 'index.get'],
+			methods: ['post', 'uid:put', 'get'],
 		},
 		{
 			path: '/api/residents',
-			methods: ['index.get', '[uid].get', 'index.post'],
+			methods: ['get', 'uid:get', 'post'],
 		},
-		{ path: '/api/residents/notification', methods: ['[uid].put'] },
-		{ path: '/api/analytics/total', methods: ['index.get'] },
-		{ path: '/api/auth', methods: ['[uid].get'] },
+		{ path: '/api/residents/notification', methods: ['uid:put'] },
+		{ path: '/api/analytics/total', methods: ['get'] },
+		{ path: '/api/auth', methods: ['uid:get'] },
+		{ path: '/api/ledger', methods: ['get, post'] },
 	];
 
 	// Generate formatted API list with bullets
