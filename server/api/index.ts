@@ -5,7 +5,7 @@ export default defineEventHandler((event: H3Event) => {
 	const apis = [
 		{
 			path: '/api/billings',
-			methods: ['post', 'uid:delete', 'get', 'uid:get', 'delete'],
+			methods: ['post', 'uid:delete', 'get', 'uid:get', 'delete', 'uid:put'],
 		},
 		{
 			path: '/api/residents',
