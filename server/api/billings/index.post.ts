@@ -81,7 +81,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 			batch.set(subBillingRef, billingPayload);
 
-			const topLevelBillingRef = billingsRef.doc();
+			const topLevelBillingRef = billingsRef.doc(subBillingRef.id);
 			batch.set(topLevelBillingRef, {
 				...billingPayload,
 				residentId: accountno,

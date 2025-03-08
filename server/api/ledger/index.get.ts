@@ -5,7 +5,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
 	const { q, month, offset = 0 } = getQuery(event);
 	try {
-		let ledgerQuery = db.collection('ledger').orderBy('sequence', 'asc');
+		let ledgerQuery = db.collection('ledgers').orderBy('sequence', 'asc');
 
 		if (q) {
 			ledgerQuery = ledgerQuery

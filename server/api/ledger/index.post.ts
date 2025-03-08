@@ -25,7 +25,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const ledgerList = Array.isArray(body) ? body : [body];
 		const batch = db.batch();
-		const ledgerRef = db.collection('ledger').doc();
+		const ledgerRef = db.collection('ledgers').doc();
 
 		for (const item of ledgerList) {
 			batch.set(ledgerRef, {

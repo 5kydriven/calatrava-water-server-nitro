@@ -5,7 +5,7 @@ export default defineEventHandler((event: H3Event) => {
 	const apis = [
 		{
 			path: '/api/billings',
-			methods: ['post', 'uid:put', 'get'],
+			methods: ['post', 'uid:delete', 'get', 'uid:get', 'delete'],
 		},
 		{
 			path: '/api/residents',
@@ -14,10 +14,9 @@ export default defineEventHandler((event: H3Event) => {
 		{ path: '/api/residents/notification', methods: ['uid:put'] },
 		{ path: '/api/analytics/total', methods: ['get'] },
 		{ path: '/api/auth', methods: ['uid:get'] },
-		{ path: '/api/ledger', methods: ['get, post'] },
+		{ path: '/api/ledger', methods: ['get, post', 'delete', 'uid:delete'] },
 	];
 
-	// Generate formatted API list with bullets
 	const apiList = apis
 		.map(
 			(api) => `
