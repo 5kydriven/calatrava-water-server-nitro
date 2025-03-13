@@ -2,7 +2,7 @@ import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
 import calculateWaterCost from '~/utils/calculateWaterCost';
 import errorResponse from '~/utils/errorResponse';
-import successResponse from '~/utils/okResponse';
+import successResponse from '~/utils/successResponse';
 import generateSearchKeywords from '~/utils/searchKeyword';
 
 export default defineEventHandler(async (event: H3Event) => {

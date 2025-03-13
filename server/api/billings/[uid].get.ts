@@ -40,7 +40,10 @@ export default defineEventHandler(async (event: H3Event) => {
 				totalBill: bill.totalBill,
 			};
 		});
-		return okResponse({ data: billings, total: countSnapshot.data().count });
+		return successResponse({
+			data: billings,
+			total: countSnapshot.data().count,
+		});
 	} catch (error: any) {
 		console.log('billings/[uid].get', error);
 		return errorResponse(error);

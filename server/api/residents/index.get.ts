@@ -32,7 +32,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			id: index + (Number(offset) + 1),
 		}));
 
-		return okResponse({ data: residents, total: countSnap.data().count });
+		return successResponse({ data: residents, total: countSnap.data().count });
 	} catch (error: any) {
 		console.log('residents.get', error);
 		return errorResponse(error);

@@ -1,6 +1,6 @@
 import { getFirestore } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
-import successResponse from '~/utils/okResponse';
+import successResponse from '~/utils/successResponse';
 import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {

@@ -29,7 +29,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			id: index + (Number(offset) + 1),
 		}));
 
-		return okResponse({ data: ledgers, total: countSnap.data().count });
+		return successResponse({ data: ledgers, total: countSnap.data().count });
 	} catch (error) {
 		console.log(error);
 		return errorResponse(error);

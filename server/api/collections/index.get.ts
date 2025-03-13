@@ -1,8 +1,5 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
-import calculateWaterBill from '~/utils/calculateWaterBill';
-import calculateWaterCost from '~/utils/calculateWaterCost';
-import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
@@ -44,7 +41,10 @@ export default defineEventHandler(async (event: H3Event) => {
 			id: index + (Number(offset) + 1),
 		}));
 
-		return okResponse({ data: collections, total: countSnap.data().count });
+		return successResponse({
+			data: collections,
+			total: countSnap.data().count,
+		});
 	} catch (error: any) {
 		console.log('collections.get', error);
 		return errorResponse(error);

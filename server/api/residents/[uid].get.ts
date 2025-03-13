@@ -35,7 +35,7 @@ export default defineEventHandler(async (event: H3Event) => {
 				totalBill: bill.totalBill,
 			};
 		});
-		return okResponse({
+		return successResponse({
 			data: { ...residentSnapshot.data(), billings, uid: residentSnapshot.id },
 		});
 	} catch (error: any) {
