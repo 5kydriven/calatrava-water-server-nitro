@@ -3,7 +3,7 @@ import { H3Event } from 'h3';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { isAll = true } = getQuery(event);
+	const { isAll } = getQuery(event);
 
 	try {
 		let announcementRef = db
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			.orderBy('createdAt', 'desc');
 
 		// Execute the query and get the results
-		const snapshot = await (isAll
+		const snapshot = await (isAll == 'true'
 			? announcementRef.get()
 			: announcementRef.limit(1).get());
 

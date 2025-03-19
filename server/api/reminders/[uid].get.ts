@@ -4,7 +4,7 @@ import { H3Event } from 'h3';
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
 	const params = getRouterParam(event, 'uid');
-	const { isAll = true } = getQuery(event);
+	const { isAll } = getQuery(event);
 
 	try {
 		let remindersRef = db
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			.where('residentUid', '==', params);
 
 		// Execute the query and get the results
-		const snapshot = await (isAll
+		const snapshot = await (isAll == 'true'
 			? remindersRef.get()
 			: remindersRef.limit(1).get());
 
