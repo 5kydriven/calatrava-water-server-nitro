@@ -3,9 +3,9 @@ import { H3Event } from 'h3';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const body = await readBody(event);
+	const { dueDate, content, type } = await readBody(event);
 
-	if (!body) {
+	if (!dueDate || content) {
 		createError({
 			statusCode: 400,
 			statusMessage: 'bad request',
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const announcementSnap = await db
 			.collection('announcements')
-			.add({ ...body, createdAt: Timestamp.now() });
+			.add({ dueDate, content, type, createdAt: Timestamp.now() });
 
 		return successResponse({
 			message: 'Succesfully added announcement',
