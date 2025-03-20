@@ -1,102 +1,122 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
-import calculateWaterCost from '~/utils/calculateWaterCost';
+import pkg from 'papaparse';
+const { parse } = pkg;
 import errorResponse from '~/utils/errorResponse';
 import successResponse from '~/utils/successResponse';
 import generateSearchKeywords from '~/utils/searchKeyword';
 
+interface ResidentData {
+	book: string;
+	fullname: string;
+	accountno: string;
+	waterusage: string;
+	[key: string]: any;
+}
+
+interface BillingId {
+	uid: string;
+	accountno: string;
+}
+
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const body = await readBody(event);
-
-	if (!body) {
-		return errorResponse({
-			statusCode: 204,
-			statusMessage: 'no content',
-			message: 'Request cannot be empty',
-		});
-	}
-
-	if (Array.isArray(body) && body.length === 0) {
-		return errorResponse({
-			statusCode: 400,
-			statusMessage: 'bad request',
-			message: 'Request body array cannot be empty.',
-		});
-	}
 
 	try {
-		const defaultTiers = [
-			{ min: 0, max: 10, rate: 75, fixed: true },
-			{ min: 11, max: 20, rate: 12 },
-			{ min: 21, max: 30, rate: 13.5 },
-			{ min: 31, max: 40, rate: 15 },
-			{ min: 41, max: 50, rate: 16.5 },
-			{ min: 51, max: Infinity, rate: 18 },
-		];
-
-		const dataArray = Array.isArray(body) ? body : [body];
-
-		const batch = db.batch();
-		const residentsRef = db.collection('residents');
-		const billingsRef = db.collection('billings');
-
-		const billingIds: { uid: string; accountno: string }[] = [];
-
-		for (const item of dataArray) {
-			const { address, fullname, accountno, averageuse, ...billingData } = item;
-
-			const residentRef = residentsRef.doc(accountno);
-			batch.set(
-				residentRef,
-				{
-					address: address.toLowerCase(),
-					fullname: fullname.toLowerCase(),
-					createdAt: Timestamp.now(),
-					classification: 'residential',
-					NotificationToken: null,
-					searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
-				},
-				{ merge: true },
-			);
-
-			const subBillingRef = residentRef.collection('billings').doc();
-			billingIds.push({ uid: subBillingRef.id, accountno });
-
-			const bill = calculateWaterBill(averageuse, defaultTiers);
-
-			const billingPayload = {
-				...billingData,
-				address: address.toLowerCase(),
-				fullname: fullname.toLowerCase(),
-				accountno,
-				averageuse,
-				waterCharge: calculateWaterCost(averageuse),
-				totalBill: calculateWaterCost(averageuse),
-				environmentalFee: bill.environmentalFee,
-				paymentReceipt: null,
-				status: 'unpaid',
-				createdAt: Timestamp.now(),
-			};
-
-			batch.set(subBillingRef, billingPayload);
-
-			const topLevelBillingRef = billingsRef.doc(subBillingRef.id);
-			batch.set(topLevelBillingRef, {
-				...billingPayload,
-				residentId: accountno,
-			});
+		const formData = await readMultipartFormData(event);
+		if (!formData?.length) {
+			return { status: 'error', message: 'No file uploaded' };
 		}
 
-		await batch.commit();
+		const file = formData.find((item) => item.name === 'file');
+		if (!file?.data || !file.filename?.endsWith('.csv')) {
+			return { status: 'error', message: 'Invalid file' };
+		}
+
+		const csvData = file.data.toString('utf-8');
+		const { data, errors } = parse<ResidentData>(csvData, {
+			header: true,
+			skipEmptyLines: true,
+		});
+
+		if (errors.length > 0) {
+			console.error('CSV Parsing Errors:', errors);
+			return { status: 'error', message: 'Error parsing CSV' };
+		}
+
+		if (!data.length) {
+			return { status: 'error', message: 'Empty CSV file' };
+		}
+
+		const BATCH_SIZE = 500;
+		const billingIds: BillingId[] = [];
+		const batches = [];
+
+		for (let i = 0; i < data.length; i += BATCH_SIZE) {
+			const batch = db.batch();
+			const chunk = data.slice(i, i + BATCH_SIZE);
+
+			chunk.forEach((item: ResidentData) => {
+				const {
+					book,
+					fullname,
+					accountno,
+					waterusage,
+					classtype,
+					...billingData
+				} = item;
+
+				if (!accountno || !fullname || !book) {
+					return;
+				}
+
+				const residentsRef = db.collection('residents');
+				const residentRef = residentsRef.doc(accountno);
+
+				const residentData = {
+					book: book.toLowerCase(),
+					fullname: fullname.toLowerCase(),
+					createdAt: Timestamp.now(),
+					classtype,
+					NotificationToken: null,
+					searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
+				};
+
+				batch.set(residentRef, residentData, { merge: true });
+
+				const billingsRef = db.collection('billings');
+				const subBillingRef = residentRef.collection('billings').doc();
+				billingIds.push({ uid: subBillingRef.id, accountno });
+
+				const billingPayload = {
+					...billingData,
+					book: book.toLowerCase(),
+					fullname: fullname.toLowerCase(),
+					accountno,
+					waterusage,
+					paymentReceipt: null,
+					classtype,
+					createdAt: Timestamp.now(),
+				};
+
+				batch.set(subBillingRef, billingPayload);
+				batch.set(billingsRef.doc(subBillingRef.id), {
+					...billingPayload,
+					residentId: accountno,
+				});
+			});
+
+			batches.push(batch.commit());
+		}
+
+		await Promise.all(batches);
 
 		return successResponse({
-			message: 'Billings uploaded successfully',
-			data: billingIds,
+			message: 'Successfully added collections',
 			total: billingIds.length,
 		});
-	} catch (error: any) {
-		console.log(error);
+	} catch (error) {
+		console.error('Processing error:', error);
 		return errorResponse(error);
 	}
 });
