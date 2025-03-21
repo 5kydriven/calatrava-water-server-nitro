@@ -37,18 +37,19 @@ export default defineEventHandler(async (event: H3Event) => {
 			`Processing ${data.length} records in ${totalBatches} batches.`,
 		);
 
-		for (let i = 0; i < totalBatches; i++) {
-			const batch = db.batch();
-			const chunk = data.slice(i * batchSize, (i + 1) * batchSize);
+		const test = data.map((item: any) => ({ ...item }));
+		// for (let i = 0; i < totalBatches; i++) {
+		// 	const batch = db.batch();
+		// 	const chunk = data.slice(i * batchSize, (i + 1) * batchSize);
 
-			chunk.forEach((item: any) => {
-				const docRef = db.collection('collections').doc();
-				batch.set(docRef, { ...item, createdAt: Timestamp.now() });
-			});
+		// 	chunk.forEach((item: any) => {
+		// 		const docRef = db.collection('collections').doc();
+		// 		batch.set(docRef, { ...item, createdAt: Timestamp.now() });
+		// 	});
 
-			await batch.commit();
-			console.log(`Batch ${i + 1} committed`);
-		}
+		// 	await batch.commit();
+		// 	console.log(`Batch ${i + 1} committed`);
+		// }
 
 		return successResponse({ message: 'Successfully added collections' });
 	} catch (error) {
