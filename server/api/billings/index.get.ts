@@ -35,7 +35,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const startTimestamp = Timestamp.fromDate(startOfMonth);
 		const endTimestamp = Timestamp.fromDate(endOfMonth);
-		console.log('start: ', startTimestamp, 'end: ', endTimestamp);
+
 		let billingsQuery = db
 			.collectionGroup('billings')
 			.where('createdAt', '>=', startTimestamp)
