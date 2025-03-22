@@ -6,6 +6,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	const { q, month, offset = 0 } = getQuery(event);
 	try {
 		let ledgerQuery = db.collection('ledgers').orderBy('sequence', 'asc');
+		const countSnap = await ledgerQuery.count().get();
 
 		if (q) {
 			ledgerQuery = ledgerQuery
@@ -21,7 +22,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		}
 
 		const ledgerSnapshot = await ledgerQuery.get();
-		const countSnap = await ledgerQuery.count().get();
 
 		const ledgers = ledgerSnapshot.docs.map((doc, index) => ({
 			uid: doc.id,
