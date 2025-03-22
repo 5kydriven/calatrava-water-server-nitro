@@ -11,12 +11,8 @@ interface ResidentData {
 	fullname: string;
 	accountno: string;
 	waterusage: string;
+	billamnt: number;
 	[key: string]: any;
-}
-
-interface BillingId {
-	uid: string;
-	accountno: string;
 }
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -49,7 +45,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		}
 
 		const BATCH_SIZE = 500;
-		const billingIds: BillingId[] = [];
 		const batches = [];
 
 		for (let i = 0; i < data.length; i += BATCH_SIZE) {
@@ -63,6 +58,7 @@ export default defineEventHandler(async (event: H3Event) => {
 					accountno,
 					waterusage,
 					classtype,
+					billamnt,
 					...billingData
 				} = item;
 
@@ -86,12 +82,12 @@ export default defineEventHandler(async (event: H3Event) => {
 
 				const billingsRef = db.collection('billings');
 				const subBillingRef = residentRef.collection('billings').doc();
-				billingIds.push({ uid: subBillingRef.id, accountno });
 
 				const billingPayload = {
 					...billingData,
 					book: book.toLowerCase(),
 					fullname: fullname.toLowerCase(),
+					billamnt: Number(billamnt),
 					accountno,
 					waterusage,
 					paymentReceipt: null,
@@ -113,7 +109,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		return successResponse({
 			message: 'Successfully added collections',
-			total: billingIds.length,
 		});
 	} catch (error) {
 		console.error('Processing error:', error);
