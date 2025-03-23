@@ -9,7 +9,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			.collection('ledgers')
 			.orderBy('trans_date', 'asc')
 			.orderBy('sequence', 'desc');
-		const countSnap = await ledgerQuery.count().get();
 
 		if (month) {
 			const [year, monthNum] = (month as string).split('-'); // Split "2025-3" into ["2025", "3"]
@@ -26,6 +25,8 @@ export default defineEventHandler(async (event: H3Event) => {
 				.where('trans_date', '>=', startDate)
 				.where('trans_date', '<=', endDate);
 		}
+
+		const countSnap = await ledgerQuery.count().get();
 
 		if (q) {
 			ledgerQuery = ledgerQuery
