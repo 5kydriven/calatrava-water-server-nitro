@@ -17,33 +17,23 @@ export default defineEventHandler(async (event: H3Event) => {
 	}
 
 	try {
-		const selectedDate = new Date(Date.parse(month.toString()));
+		let billingsQuery = db.collection('billings').orderBy('book', 'asc');
 
-		if (isNaN(selectedDate.getTime())) {
-			throw new Error('Invalid month format.');
+		if (month) {
+			const [year, monthNum] = (month as string).split('-'); // Split "2025-3" into ["2025", "3"]
+			const paddedMonth = monthNum.padStart(2, '0'); // Ensure "3" becomes "03"
+
+			// Calculate start and end dates in MM/DD/YYYY format
+			const startDate = `${paddedMonth}/01/${year}`; // e.g., "03/01/2025"
+			const lastDay = new Date(Number(year), Number(monthNum), 0).getDate(); // Get last day of the month
+			const endDate = `${paddedMonth}/${lastDay}/${year}`; // e.g., "03/31/2025"
+
+			// Add date range filter (assuming 'date' is the field in your DB storing "MM/DD/YYYY")
+			billingsQuery = billingsQuery
+				// Ensure ordered by date field
+				.where('bill_date', '>=', startDate)
+				.where('bill_date', '<=', endDate);
 		}
-
-		const selectedYear = selectedDate.getFullYear();
-		const selectedMonth = selectedDate.getMonth();
-
-		const startOfMonth = new Date(
-			Date.UTC(selectedYear, selectedMonth, 1, 0, 0, 0, 0),
-		);
-		const endOfMonth = new Date(
-			Date.UTC(selectedYear, selectedMonth + 1, 0, 23, 59, 59, 999),
-		);
-
-		const startTimestamp = Timestamp.fromDate(startOfMonth);
-		const endTimestamp = Timestamp.fromDate(endOfMonth);
-
-		let billingsQuery = db
-			.collectionGroup('billings')
-			.where('createdAt', '>=', startTimestamp)
-			.where(
-				'createdAt',
-				'<=',
-				Timestamp.fromMillis(endTimestamp.toMillis() + 1),
-			);
 
 		const countSnap = await billingsQuery.count().get();
 
