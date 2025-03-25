@@ -12,6 +12,7 @@ export default defineEventHandler((event: H3Event) => {
 		{ path: '/api/residents/collection', methods: ['uid:get'] },
 		{ path: '/api/residents/ledger', methods: ['uid:get'] },
 		{ path: '/api/analytics/total', methods: ['get'] },
+		{ path: '/api/analytics/line', methods: ['get'] },
 		{ path: '/api/auth', methods: ['uid:get'] },
 		{ path: '/api/ledgers', methods: ['get, post', 'delete', 'uid:delete'] },
 		{ path: '/api/collections', methods: ['get, post'] },
