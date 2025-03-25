@@ -7,10 +7,7 @@ export default defineEventHandler((event: H3Event) => {
 			path: '/api/billings',
 			methods: ['post', 'uid:delete', 'get', 'uid:get', 'delete', 'uid:put'],
 		},
-		{
-			path: '/api/residents',
-			methods: ['get', 'uid:get', 'post'],
-		},
+		{ path: '/api/residents', methods: ['get', 'uid:get', 'post'] },
 		{ path: '/api/residents/notification', methods: ['uid:put'] },
 		{ path: '/api/residents/collection', methods: ['uid:get'] },
 		{ path: '/api/residents/ledger', methods: ['uid:get'] },
@@ -20,6 +17,7 @@ export default defineEventHandler((event: H3Event) => {
 		{ path: '/api/collections', methods: ['get, post'] },
 		{ path: '/api/reminders', methods: ['uid:get, post'] },
 		{ path: '/api/announcements', methods: ['get, post'] },
+		{ path: '/api/admin', methods: ['post'] },
 	];
 
 	const apiList = apis

@@ -6,18 +6,19 @@ import {
 import { H3Event } from 'h3';
 import successResponse from '~/utils/successResponse';
 import errorResponse from '~/utils/errorResponse';
+import { format } from 'date-fns';
 
 export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const db = getFirestore();
-		const now = new Date();
+		const currentMonth = format(new Date(), 'yyyy-M');
 
-		const startOfMonth = Timestamp.fromDate(
-			new Date(now.getFullYear(), now.getMonth(), 1),
-		);
-		const endOfMonth = Timestamp.fromDate(
-			new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999),
-		);
+		const [year, monthNum] = currentMonth.split('-');
+		const paddedMonth = monthNum.padStart(2, '0');
+
+		const startDate = `${paddedMonth}/01/${year}`;
+		const lastDay = new Date(Number(year), Number(monthNum), 0).getDate();
+		const endDate = `${paddedMonth}/${lastDay}/${year}`;
 
 		const residentsSnap = await db.collection('residents').count().get();
 
@@ -28,8 +29,8 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const currentMonthBillingSnap = await db
 			.collection('billings')
-			.where('createdAt', '>=', startOfMonth)
-			.where('createdAt', '<=', endOfMonth)
+			.where('bill_date', '>=', startDate)
+			.where('bill_date', '<=', endDate)
 			.aggregate({ income: AggregateField.sum('billamnt') })
 			.get();
 
