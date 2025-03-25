@@ -27,7 +27,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			.get();
 
 		const currentMonthBillingSnap = await db
-			.collectionGroup('billings')
+			.collection('billings')
 			.where('createdAt', '>=', startOfMonth)
 			.where('createdAt', '<=', endOfMonth)
 			.aggregate({ income: AggregateField.sum('billamnt') })
