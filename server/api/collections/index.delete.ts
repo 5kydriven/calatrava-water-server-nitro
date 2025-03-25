@@ -5,10 +5,10 @@ import successResponse from '~/utils/successResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const ledgers = await readBody(event);
+	const collections = await readBody(event);
 
 	try {
-		if (!ledgers) {
+		if (!collections) {
 			throw createError({
 				statusCode: 400,
 				statusMessage: 'bad request',
@@ -18,8 +18,8 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const batch = db.batch();
 
-		ledgers.forEach((item: any) => {
-			const ledgerRef = db.collection('ledgers').doc(item.uid);
+		collections.forEach((item: any) => {
+			const ledgerRef = db.collection('collections').doc(item.uid);
 
 			batch.delete(ledgerRef);
 		});
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		await batch.commit();
 
 		return successResponse({
-			message: 'Succesfully deleted ledgers',
+			message: 'Succesfully deleted collections',
 		});
 	} catch (error) {
 		console.log(error);
