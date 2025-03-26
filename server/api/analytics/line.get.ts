@@ -37,7 +37,7 @@ export default defineEventHandler(async (event: H3Event) => {
 					.where('bill_date', '<=', endDate);
 
 				const sumAggregateQuery = q.aggregate({
-					total: AggregateField.sum('billamnt'),
+					total: AggregateField.sum('totalBill'),
 				});
 
 				const snapshot = await sumAggregateQuery.get();

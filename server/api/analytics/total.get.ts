@@ -24,14 +24,14 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		const totalBillingSnap = await db
 			.collection('billings')
-			.aggregate({ income: AggregateField.sum('billamnt') })
+			.aggregate({ income: AggregateField.sum('totalBill') })
 			.get();
 
 		const currentMonthBillingSnap = await db
 			.collection('billings')
 			.where('bill_date', '>=', startDate)
 			.where('bill_date', '<=', endDate)
-			.aggregate({ income: AggregateField.sum('billamnt') })
+			.aggregate({ income: AggregateField.sum('totalBill') })
 			.get();
 
 		return successResponse({
