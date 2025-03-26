@@ -9,20 +9,6 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const year = format(new Date(), 'yyyy');
 		const months = Array.from({ length: 12 }, (_, i) => i + 1); // 1 to 12
-		const monthNames = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December',
-		];
 
 		const results = await Promise.all(
 			months.map(async (month, index) => {
@@ -43,7 +29,7 @@ export default defineEventHandler(async (event: H3Event) => {
 				const snapshot = await sumAggregateQuery.get();
 				const total = snapshot.data().total || 0;
 
-				return { month: monthNames[index], total };
+				return { month: index + 1, total };
 			}),
 		);
 
