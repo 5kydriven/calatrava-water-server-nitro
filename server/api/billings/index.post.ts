@@ -57,6 +57,8 @@ export default defineEventHandler(async (event: H3Event) => {
 					fullname,
 					accountno,
 					waterusage,
+					arrearsenv,
+					due_penalty,
 					classtype,
 					billamnt,
 					...billingData
@@ -88,6 +90,10 @@ export default defineEventHandler(async (event: H3Event) => {
 					book: book.toLowerCase(),
 					fullname: fullname.toLowerCase(),
 					billamnt: Number(billamnt),
+					due_penalty,
+					arrearsenv,
+					totalBill:
+						Number(billamnt) + Number(due_penalty) + Number(arrearsenv),
 					accountno,
 					waterusage,
 					paymentReceipt: null,
