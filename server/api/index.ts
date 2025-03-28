@@ -18,7 +18,7 @@ export default defineEventHandler((event: H3Event) => {
 		{ path: '/api/collections', methods: ['get, post', 'delete'] },
 		{ path: '/api/reminders', methods: ['uid:get, post'] },
 		{ path: '/api/announcements', methods: ['get, post'] },
-		{ path: '/api/admin', methods: ['post'] },
+		{ path: '/api/admin', methods: ['uid:put'] },
 	];
 
 	const apiList = apis

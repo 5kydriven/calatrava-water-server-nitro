@@ -1,13 +1,21 @@
 import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const body = await readBody(event);
 	const auth = getAuth();
+	const uid = getRouterParam(event, 'uid');
 
 	try {
 		if (!body) {
+			throw createError({
+				statusCode: 400,
+				statusMessage: 'bad request',
+				message: 'Required body',
+			});
+		}
+
+		if (!uid) {
 			throw createError({
 				statusCode: 400,
 				statusMessage: 'badd request',
@@ -15,7 +23,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			});
 		}
 
-		const userRef = await auth.updateUser(body.uid, {
+		const userRef = await auth.updateUser(uid, {
 			...body,
 		});
 
