@@ -31,11 +31,20 @@ export default defineEventHandler(async (event: H3Event) => {
 			});
 		}
 
-		const userRef = await auth.updateUser(uid, {
-			displayName: body.displayName,
-			email: body.email,
-			password: body.password,
-		});
+		let userRef;
+
+		if (body.password) {
+			userRef = await auth.updateUser(uid, {
+				displayName: body.displayName,
+				email: body.email,
+				password: body.password,
+			});
+		} else {
+			userRef = await auth.updateUser(uid, {
+				displayName: body.displayName,
+				email: body.email,
+			});
+		}
 
 		return successResponse({
 			message: 'Successfully updated account!',
