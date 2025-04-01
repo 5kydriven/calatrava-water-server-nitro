@@ -1,8 +1,16 @@
 import { getAuth } from 'firebase-admin/auth';
 import { H3Event } from 'h3';
 
+interface Admin {
+	displayName?: string;
+	email?: string;
+	password?: string;
+	photoURL?: string;
+	phoneNumber?: string;
+}
+
 export default defineEventHandler(async (event: H3Event) => {
-	const body = await readBody(event);
+	const body = await readBody<Admin>(event);
 	const auth = getAuth();
 	const uid = getRouterParam(event, 'uid');
 
@@ -24,7 +32,9 @@ export default defineEventHandler(async (event: H3Event) => {
 		}
 
 		const userRef = await auth.updateUser(uid, {
-			...body,
+			displayName: body.displayName,
+			email: body.email,
+			password: body.password,
 		});
 
 		return successResponse({
