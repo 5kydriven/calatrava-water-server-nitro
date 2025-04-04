@@ -1,4 +1,4 @@
-import { getAuth } from 'firebase-admin/auth';
+import { getAuth, UserRecord } from 'firebase-admin/auth';
 import { H3Event } from 'h3';
 
 interface Admin {
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			});
 		}
 
-		let userRef;
+		let userRef: UserRecord;
 
 		if (body.password) {
 			userRef = await auth.updateUser(uid, {
