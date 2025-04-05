@@ -37,7 +37,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			`Processing ${data.length} records in ${totalBatches} batches.`,
 		);
 
-		const test = data.map((item: any) => ({ ...item }));
 		for (let i = 0; i < totalBatches; i++) {
 			const batch = db.batch();
 			const chunk = data.slice(i * batchSize, (i + 1) * batchSize);
