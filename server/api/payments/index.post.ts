@@ -46,7 +46,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			.set(
 				{
 					paymentReceipt: publicUrlData.publicUrl,
-					paymentStatus: 'inprogress',
+					paymentStatus: 'verifiying',
 					paymentDate: Timestamp.now(),
 				},
 				{ merge: true },
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const billings = await db.collection('billings').doc(billUid).set(
 			{
 				paymentReceipt: publicUrlData.publicUrl,
-				paymentStatus: 'inprogress',
+				paymentStatus: 'verifiying',
 				paymentDate: Timestamp.now(),
 			},
 			{ merge: true },
