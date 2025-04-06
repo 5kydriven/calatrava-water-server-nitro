@@ -1,6 +1,7 @@
-import { getFirestore, Timestamp} from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event, readMultipartFormData } from 'h3';
 import pkg from 'papaparse';
+import generateSearchKeywords from '~/utils/searchKeyword';
 const { parse } = pkg;
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -52,7 +53,11 @@ export default defineEventHandler(async (event: H3Event) => {
 
 			chunk.forEach((item: any) => {
 				const docRef = db.collection('ledgers').doc();
-				batch.set(docRef, { ...item, createdAt: Timestamp.now() });
+				batch.set(docRef, {
+					...item,
+					searchKeywords: generateSearchKeywords(item.accountno),
+					createdAt: Timestamp.now(),
+				});
 			});
 
 			await batch.commit();

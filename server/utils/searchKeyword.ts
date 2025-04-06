@@ -1,4 +1,4 @@
-export default function generateSearchKeywords(name: string) {
+export default function generateSearchKeywords(name: string): string[] {
 	const keywords = new Set();
 
 	keywords.add(name.toLowerCase());
@@ -23,5 +23,5 @@ export default function generateSearchKeywords(name: string) {
 		}
 	});
 
-	return Array.from(keywords);
+	return Array.from(keywords) as string[];
 }

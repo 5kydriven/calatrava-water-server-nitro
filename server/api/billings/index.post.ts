@@ -76,7 +76,7 @@ export default defineEventHandler(async (event: H3Event) => {
 					fullname: fullname.toLowerCase(),
 					createdAt: Timestamp.now(),
 					classtype,
-					NotificationToken: null,
+					notificationToken: null,
 					searchKeywords: generateSearchKeywords(fullname.toLowerCase()),
 				};
 
@@ -95,6 +95,7 @@ export default defineEventHandler(async (event: H3Event) => {
 					totalBill:
 						Number(billamnt) + Number(due_penalty) + Number(arrearsenv),
 					accountno,
+					searchKeywords: generateSearchKeywords(accountno),
 					waterusage,
 					paymentReceipt: null,
 					classtype,
