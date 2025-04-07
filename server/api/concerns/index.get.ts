@@ -8,7 +8,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const snapshot = await db
 			.collection('concerns')
 			.orderBy('createdAt', 'desc')
-			.limit(limit as number)
+			// .limit(limit as number)
 			.get();
 
 		const count = await db.collection('concerns').count().get();
