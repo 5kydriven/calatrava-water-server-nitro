@@ -9,6 +9,12 @@ export default defineEventHandler(async (event: H3Event) => {
 			.orderBy('createdAt', 'desc')
 			.get();
 
+		const count = await db
+			.collection('notifications')
+			.where('isRead', '==', 'false')
+			.count()
+			.get();
+
 		const notifications = snapshot.docs.map((doc) => ({
 			...doc.data(),
 			uid: doc.id,
@@ -16,6 +22,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		return successResponse({
 			data: notifications,
+			total: count.data().count,
 		});
 	} catch (error: any) {
 		return errorResponse(error);
