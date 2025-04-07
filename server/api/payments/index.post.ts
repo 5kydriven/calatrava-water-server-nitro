@@ -61,10 +61,20 @@ export default defineEventHandler(async (event: H3Event) => {
 			{ merge: true },
 		);
 
+		const notification = await db.collection('billings').add({
+			createdAt: Timestamp.now(),
+			isRead: false,
+			uid: residentUid,
+		});
+
 		setResponseStatus(event, 200, 'OK');
 		return successResponse({
 			message: 'File uploaded successfully',
-			data: { billing: billings, residentBill: residentBill },
+			data: {
+				billing: billings,
+				residentBill: residentBill,
+				notification: notification.id,
+			},
 		});
 	} catch (error: any) {
 		console.error('Error processing request:', error);
