@@ -19,9 +19,13 @@ export default defineEventHandler(async (event: H3Event) => {
 			});
 		}
 
+		// Generate a unique file name using current datetime
+		const timestamp = new Date().toISOString().replace(/[-:.]/g, ''); // Remove any characters that could cause issues in filenames
+		const uniqueFileName = `payments/${timestamp}_${file.name}`;
+
 		const { data, error } = await supabase.storage
 			.from('images')
-			.upload(`payments/${file.name}`, file, {
+			.upload(uniqueFileName, file, {
 				contentType: file.type,
 				upsert: true,
 			});
