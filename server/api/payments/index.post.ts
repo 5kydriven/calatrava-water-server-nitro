@@ -61,7 +61,7 @@ export default defineEventHandler(async (event: H3Event) => {
 			{ merge: true },
 		);
 
-		const notification = await db.collection('billings').add({
+		const notification = await db.collection('notifications').add({
 			createdAt: Timestamp.now(),
 			isRead: false,
 			uid: residentUid,
