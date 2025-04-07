@@ -61,9 +61,12 @@ export default defineEventHandler(async (event: H3Event) => {
 			{ merge: true },
 		);
 
+		const resident = await db.collection('residents').doc(residentUid).get();
+
 		const notification = await db.collection('notifications').add({
 			createdAt: Timestamp.now(),
 			isRead: false,
+			name: resident.data().fullname,
 			uid: residentUid,
 		});
 
