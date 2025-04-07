@@ -39,8 +39,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		if (q) {
 			billingsQuery = billingsQuery
-				.where('accountno', '>=', q)
-				.where('accountno', '<=', q)
+				.where('searchKeywords', 'array-contains', q)
 				.limit(3);
 		} else {
 			billingsQuery = billingsQuery.limit(10);

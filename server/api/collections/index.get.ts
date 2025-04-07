@@ -37,8 +37,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		if (q) {
 			collectionsQuery = collectionsQuery
-				.where('accountno', '>=', q)
-				.where('accountno', '<=', q)
+				.where('searchKeywords', 'array-contains', q)
 				.limit(3);
 		} else {
 			collectionsQuery = collectionsQuery.limit(10);

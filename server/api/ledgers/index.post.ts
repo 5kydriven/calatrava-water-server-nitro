@@ -1,4 +1,4 @@
-import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp, WriteBatch } from 'firebase-admin/firestore';
 import { H3Event, readMultipartFormData } from 'h3';
 import pkg from 'papaparse';
 import generateSearchKeywords from '~/utils/searchKeyword';
@@ -9,19 +9,19 @@ export default defineEventHandler(async (event: H3Event) => {
 	const formData = await readMultipartFormData(event);
 
 	if (!formData) {
-		createError({
+		throw createError({
 			status: 400,
 			message: 'No file uploaded',
-			statusMessage: 'bad request',
+			statusMessage: 'Bad Request',
 		});
 	}
 
 	const file = formData.find((item) => item.name === 'file');
 	if (!file || !file.filename) {
-		createError({
+		throw createError({
 			status: 400,
 			message: 'Invalid file',
-			statusMessage: 'bad request',
+			statusMessage: 'Bad Request',
 		});
 	}
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const csvData = file.data.toString('utf-8');
 
 		// Parse CSV into JSON
-		const { data, errors } = parse(csvData, {
+		const { data, errors } = parse<any>(csvData, {
 			header: true,
 			skipEmptyLines: true,
 		});
@@ -40,33 +40,51 @@ export default defineEventHandler(async (event: H3Event) => {
 			return { status: 'error', message: 'Error parsing CSV' };
 		}
 
-		// Batch Firestore Writes (limit: 500 per batch)
-		const batchSize = 500;
-		const totalBatches = Math.ceil(data.length / batchSize);
-		console.log(
-			`Processing ${data.length} records in ${totalBatches} batches.`,
-		);
+		console.log(`Parsed ${data.length} records.`);
 
-		for (let i = 0; i < totalBatches; i++) {
-			const batch = db.batch();
-			const chunk = data.slice(i * batchSize, (i + 1) * batchSize);
+		// Batch Firestore Writes (limit: 500 writes per batch)
+		let batch = db.batch();
+		let operationCounter = 0;
+		const batches: WriteBatch[] = [];
 
-			chunk.forEach((item: any) => {
-				const docRef = db.collection('ledgers').doc();
-				batch.set(docRef, {
-					...item,
-					searchKeywords: generateSearchKeywords(item.accountno),
-					createdAt: Timestamp.now(),
-				});
+		for (const item of data) {
+			const docRef = db.collection('ledgers').doc();
+			batch.set(docRef, {
+				...item,
+				searchKeywords: generateSearchKeywords(item.accountno),
+				createdAt: Timestamp.now(),
 			});
+			operationCounter++;
 
-			await batch.commit();
-			console.log(`Batch ${i + 1} committed`);
+			if (operationCounter >= 450) {
+				// safer to commit around 450
+				batches.push(batch);
+				batch = db.batch();
+				operationCounter = 0;
+			}
 		}
 
+		// Push remaining
+		if (operationCounter > 0) {
+			batches.push(batch);
+		}
+
+		console.log(`Committing ${batches.length} batches...`);
+
+		// Commit all batches in parallel
+		const results = await Promise.allSettled(batches.map((b) => b.commit()));
+
+		// Check for errors
+		const failedBatches = results.filter((r) => r.status === 'rejected');
+		if (failedBatches.length > 0) {
+			console.error(`Failed ${failedBatches.length} batches`);
+			throw new Error('Some batches failed to commit.');
+		}
+
+		console.log('All batches committed successfully.');
 		return successResponse({ message: 'Successfully added ledger' });
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return errorResponse(error);
 	}
 });

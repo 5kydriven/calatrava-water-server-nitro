@@ -30,8 +30,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		if (q) {
 			ledgerQuery = ledgerQuery
-				.where('accountno', '>=', q)
-				.where('accountno', '<=', q)
+				.where('searchKeywords', 'array-contains', q)
 				.limit(3);
 		} else {
 			ledgerQuery = ledgerQuery.limit(10);
