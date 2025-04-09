@@ -98,6 +98,8 @@ export default defineEventHandler(async (event: H3Event) => {
 					searchKeywords: generateSearchKeywords(accountno),
 					waterusage,
 					paymentReceipt: null,
+					paymentStatus: null,
+					paymentDate: null,
 					classtype,
 					createdAt: Timestamp.now(),
 				};
