@@ -7,6 +7,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const snapshot = await db
 			.collection('notifications')
 			.orderBy('createdAt', 'desc')
+			.limit(10)
 			.get();
 
 		const count = await db
