@@ -26,12 +26,14 @@ export default defineEventHandler(async (event: H3Event) => {
 				.where('trans_date', '<=', endDate);
 		}
 
+		if (q) {
+			ledgerQuery = ledgerQuery.where('searchKeywords', 'array-contains', q);
+		}
+
 		const countSnap = await ledgerQuery.count().get();
 
 		if (q) {
-			ledgerQuery = ledgerQuery
-				.where('searchKeywords', 'array-contains', q)
-				.limit(3);
+			ledgerQuery = ledgerQuery.limit(3);
 		} else {
 			ledgerQuery = ledgerQuery.limit(10);
 		}

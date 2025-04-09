@@ -35,12 +35,18 @@ export default defineEventHandler(async (event: H3Event) => {
 				.where('bill_date', '<=', endDate);
 		}
 
+		if (q) {
+			billingsQuery = billingsQuery.where(
+				'searchKeywords',
+				'array-contains',
+				q,
+			);
+		}
+
 		const countSnap = await billingsQuery.count().get();
 
 		if (q) {
-			billingsQuery = billingsQuery
-				.where('searchKeywords', 'array-contains', q)
-				.limit(3);
+			billingsQuery = billingsQuery.limit(3);
 		} else {
 			billingsQuery = billingsQuery.limit(10);
 		}

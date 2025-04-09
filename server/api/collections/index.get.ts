@@ -33,12 +33,18 @@ export default defineEventHandler(async (event: H3Event) => {
 				.where('pymtdate', '<=', endDate);
 		}
 
+		if (q) {
+			collectionsQuery = collectionsQuery.where(
+				'searchKeywords',
+				'array-contains',
+				q,
+			);
+		}
+
 		const countSnap = await collectionsQuery.count().get();
 
 		if (q) {
-			collectionsQuery = collectionsQuery
-				.where('searchKeywords', 'array-contains', q)
-				.limit(3);
+			collectionsQuery = collectionsQuery.limit(3);
 		} else {
 			collectionsQuery = collectionsQuery.limit(10);
 		}
