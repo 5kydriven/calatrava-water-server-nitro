@@ -44,6 +44,21 @@ export default defineEventHandler(async (event: H3Event) => {
 			return { status: 'error', message: 'Empty CSV file' };
 		}
 
+		const uniqueBooks = new Set<string>();
+		data.forEach((item: ResidentData) => {
+			if (item.book) {
+				uniqueBooks.add(item.book.toLowerCase());
+			}
+		});
+
+		await db
+			.collection('books')
+			.doc('all_books')
+			.set({
+				books: Array.from(uniqueBooks),
+				updatedAt: Timestamp.now(),
+			});
+
 		const BATCH_SIZE = 500;
 		const batches = [];
 
