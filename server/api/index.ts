@@ -27,6 +27,7 @@ export default defineEventHandler((event: H3Event) => {
 			path: '/api/coordinates',
 			methods: ['post', 'get', 'uid:delete', 'uid:put', 'uid:get'],
 		},
+		{ path: '/api/books', methods: ['get'] },
 	];
 
 	const apiList = apis
