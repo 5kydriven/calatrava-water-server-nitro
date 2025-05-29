@@ -6,3 +6,5 @@ dist
 .output
 .env
 service-account.json
+service-account-v2.json
+/generated/prisma

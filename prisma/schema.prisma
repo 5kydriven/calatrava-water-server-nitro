@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Resident {
+  id                 String        @id @default(cuid())
+  accountno          String        @unique
+  classtype          String
+  created_at         DateTime      @default(now())
+  fullname           String
+  notification_token String?
+  billings           Billing[]
+  collections        Collection[]
+  ledgers            Ledger[]
+  concerns           Concern[]
+  reminders          Reminder[]
+  announcements      Anouncement[]
+}
+
+model Billing {
+  id             String   @id @default(cuid())
+  accountno      String
+  amortamnt      String
+  arrearsamt     String
+  arrearsenv     String
+  b_status       String
+  bill_date      String
+  bill_no        String
+  billamt        Int
+  billbrgy       String
+  billpurok      String
+  book           String
+  classtype      String
+  created_at     DateTime @default(now())
+  curreading     String
+  custno         String
+  discon_date    String
+  discount       String
+  due_date       String
+  due_penalty    String
+  fullname       String
+  m_penalty      String
+  mr_sys_no      String
+  mrrfdue        String
+  mtr_no         String
+  nrwater        String
+  paid           String
+  paymentReceipt String?
+  penalized      String
+  prereading     String
+  prevused       String
+  prevused2      String
+  prvbilldate    String
+  prvdiscon      String
+  prvduedate     String
+  purokcode      String
+  stubout        String
+  totalBill      Int
+  verified       String
+  waterusage     String
+
+  resident    Resident? @relation(fields: [resident_id], references: [id])
+  resident_id String?
+}
+
+model Collection {
+  id            String   @id @default(cuid())
+  accountno     String
+  amortize      String
+  arrearsamnt   String
+  arrearsenv    String
+  bankgroup     String
+  bankid        String
+  bankonline    String
+  batchno       String
+  billno        String
+  branch        String
+  cash          String
+  check         String
+  checkdate     String
+  checkno       String
+  cmrrfamnt     String
+  created_at    DateTime @default(now())
+  custno        String
+  envfee        String
+  fullname      String
+  onlineref     String
+  othrappy      String
+  othrincome    String
+  othrreconn    String
+  pacyamnt      String
+  papyamnt      String
+  payarrears    String
+  pdiscamnt     String
+  penamnt       String
+  pmrrfamnt     String
+  pymtdate      String
+  pymtmethod    String
+  receiptno     String
+  receiptstatus String
+  receipttype   String
+  runbalance    String
+  sysno         String
+  teller        String
+  trackdt       String
+  waterbill     String
+
+  resident    Resident? @relation(fields: [resident_id], references: [id])
+  resident_id String?
+}
+
+model Ledger {
+  id          String   @id @default(cuid())
+  accountno   String
+  amount      String
+  consumption String
+  created_at  DateTime @default(now())
+  custno      String
+  reading     String
+  ref_code    String
+  ref_no      String
+  sequence    String
+  tag         String
+  timestamp   String
+  trans_date  String
+
+  resident    Resident? @relation(fields: [resident_id], references: [id])
+  resident_id String?
+}
+
+model Concern {
+  id         String   @id @default(cuid())
+  area       String
+  content    String
+  created_at DateTime @default(now())
+  name       String
+  status     String
+
+  resident    Resident? @relation(fields: [resident_id], references: [id])
+  resident_id String?
+}
+
+model Reminder {
+  id         String   @id @default(cuid())
+  content    String
+  dueDate    String
+  created_at DateTime @default(now())
+  name       String
+
+  Resident    Resident? @relation(fields: [resident_id], references: [id])
+  resident_id String?
+}
+
+model Anouncement {
+  id         String   @id @default(cuid())
+  content    String
+  dueDate    String
+  type       String
+  target     String
+  created_at DateTime @default(now())
+
+  Resident    Resident? @relation(fields: [resident_id], references: [id])
+  resident_id String?
+}
+
+model faq {
+  id         String   @id @default(cuid())
+  answer     String
+  question   String
+  created_at DateTime @default(now())
+}
+
+model Coordinate {
+  id         String   @id @default(cuid())
+  lat        Float
+  lng        Float
+  name       String
+  created_at DateTime @default(now())
+}

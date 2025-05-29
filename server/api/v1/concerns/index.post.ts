@@ -7,7 +7,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const snapshot = await db
 			.collection('concerns')
-			.add({ ...concern, createdAt: Timestamp.now() });
+			.add({ ...concern, status: 'pending', createdAt: Timestamp.now() });
 
 		const notification = await db.collection('notifications').add({
 			isRead: false,
