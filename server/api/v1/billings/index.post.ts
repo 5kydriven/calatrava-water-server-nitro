@@ -99,16 +99,19 @@ export default defineEventHandler(async (event: H3Event) => {
 
 				const billingsRef = db.collection('billings');
 				const subBillingRef = residentRef.collection('billings').doc();
+				const enviromentFee =
+					Number(waterusage) > 10 ? Number(waterusage) * 0.25 : 0;
 
 				const billingPayload = {
 					...billingData,
 					book: book.toLowerCase(),
 					fullname: fullname.toLowerCase(),
 					billamnt: Number(billamnt),
-					due_penalty,
+					due_penalty: '0',
 					arrearsenv,
+					enviromentFee,
 					totalBill:
-						Number(billamnt) + Number(due_penalty) + Number(arrearsenv),
+						Number(billamnt) + Number(enviromentFee) + Number(arrearsenv),
 					accountno,
 					searchKeywords: generateSearchKeywords(accountno),
 					waterusage,
