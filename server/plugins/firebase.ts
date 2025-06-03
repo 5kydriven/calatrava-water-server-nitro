@@ -15,6 +15,5 @@ export default defineNitroPlugin((nuxtapp) => {
 		client_x509_cert_url: config.clientX509CertUrl,
 		universe_domain: config.universeDomain,
 	};
-
 	initFirebase(firebaseConfig);
 });

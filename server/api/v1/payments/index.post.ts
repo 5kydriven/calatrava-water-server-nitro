@@ -1,5 +1,5 @@
 import { H3Event } from 'h3';
-import { supabase } from '~/utils/supabaseClient';
+import { supabase } from '~/utils/supabase';
 import { createError } from 'h3'; // Explicitly import createError if not already
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
