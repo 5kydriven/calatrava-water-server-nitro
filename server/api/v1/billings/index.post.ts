@@ -110,8 +110,7 @@ export default defineEventHandler(async (event: H3Event) => {
 					due_penalty: '0',
 					arrearsenv,
 					enviromentFee,
-					totalBill:
-						Number(billamnt) + Number(enviromentFee) + Number(arrearsenv),
+					totalBill: Number(billamnt) + Number(enviromentFee),
 					accountno,
 					searchKeywords: generateSearchKeywords(accountno),
 					waterusage,
