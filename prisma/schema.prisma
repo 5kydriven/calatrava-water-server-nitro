@@ -1,26 +1,21 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("NITRO_DATABASE_URL")
+  directUrl = env("NITRO_DIRECT_URL")
 }
 
 model Resident {
-  id                 String        @id @default(cuid())
+  id                 String        @id @default(uuid())
   accountno          String        @unique
   classtype          String
-  created_at         DateTime      @default(now())
+  createdAt          DateTime      @default(now())
   fullname           String
   notification_token String?
+  book               String
   billings           Billing[]
   collections        Collection[]
   ledgers            Ledger[]
@@ -30,7 +25,7 @@ model Resident {
 }
 
 model Billing {
-  id             String   @id @default(cuid())
+  id             String   @id @default(uuid())
   accountno      String
   amortamnt      String
   arrearsamt     String
@@ -38,12 +33,12 @@ model Billing {
   b_status       String
   bill_date      String
   bill_no        String
-  billamt        Int
+  billamnt       Float
   billbrgy       String
   billpurok      String
   book           String
   classtype      String
-  created_at     DateTime @default(now())
+  createdAt      DateTime @default(now())
   curreading     String
   custno         String
   discon_date    String
@@ -67,19 +62,22 @@ model Billing {
   prvduedate     String
   purokcode      String
   stubout        String
-  totalBill      Int
+  totalBill      Float
   verified       String
   waterusage     String
+  environmentFee Float
+  paymentStatus  String?
+  paymentDate    String?
 
   resident    Resident? @relation(fields: [resident_id], references: [id])
   resident_id String?
 }
 
 model Collection {
-  id            String   @id @default(cuid())
+  id            String   @id @default(uuid())
   accountno     String
   amortize      String
-  arrearsamnt   String
+  arrearsamt    String
   arrearsenv    String
   bankgroup     String
   bankid        String
@@ -92,12 +90,12 @@ model Collection {
   checkdate     String
   checkno       String
   cmrrfamnt     String
-  created_at    DateTime @default(now())
+  createdAt     DateTime @default(now())
   custno        String
   envfee        String
   fullname      String
   onlineref     String
-  othrappy      String
+  othrapply     String
   othrincome    String
   othrreconn    String
   pacyamnt      String
@@ -122,11 +120,11 @@ model Collection {
 }
 
 model Ledger {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   accountno   String
   amount      String
   consumption String
-  created_at  DateTime @default(now())
+  createdAt   DateTime @default(now())
   custno      String
   reading     String
   ref_code    String
@@ -141,51 +139,51 @@ model Ledger {
 }
 
 model Concern {
-  id         String   @id @default(cuid())
-  area       String
-  content    String
-  created_at DateTime @default(now())
-  name       String
-  status     String
+  id        String   @id @default(uuid())
+  area      String
+  content   String
+  createdAt DateTime @default(now())
+  name      String
+  status    String
 
   resident    Resident? @relation(fields: [resident_id], references: [id])
   resident_id String?
 }
 
 model Reminder {
-  id         String   @id @default(cuid())
-  content    String
-  dueDate    String
-  created_at DateTime @default(now())
-  name       String
+  id        String   @id @default(uuid())
+  content   String
+  dueDate   String
+  createdAt DateTime @default(now())
+  name      String
 
   Resident    Resident? @relation(fields: [resident_id], references: [id])
   resident_id String?
 }
 
 model Anouncement {
-  id         String   @id @default(cuid())
-  content    String
-  dueDate    String
-  type       String
-  target     String
-  created_at DateTime @default(now())
+  id        String   @id @default(uuid())
+  content   String
+  dueDate   String
+  type      String
+  target    String
+  createdAt DateTime @default(now())
 
   Resident    Resident? @relation(fields: [resident_id], references: [id])
   resident_id String?
 }
 
 model faq {
-  id         String   @id @default(cuid())
-  answer     String
-  question   String
-  created_at DateTime @default(now())
+  id        String   @id @default(uuid())
+  answer    String
+  question  String
+  createdAt DateTime @default(now())
 }
 
 model Coordinate {
-  id         String   @id @default(cuid())
-  lat        Float
-  lng        Float
-  name       String
-  created_at DateTime @default(now())
+  id        String   @id @default(uuid())
+  lat       Float
+  lng       Float
+  name      String
+  createdAt DateTime @default(now())
 }

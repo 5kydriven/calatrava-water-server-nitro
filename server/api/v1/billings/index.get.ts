@@ -66,6 +66,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		return successResponse({ data: billings, total: countSnap.data().count });
 	} catch (error: any) {
 		console.log('billings.get', error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

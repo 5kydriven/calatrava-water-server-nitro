@@ -16,6 +16,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			message: 'Successfully updated FAQ',
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

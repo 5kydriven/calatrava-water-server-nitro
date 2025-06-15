@@ -14,6 +14,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			message: 'Successfully created FAQ',
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

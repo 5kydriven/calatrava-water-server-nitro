@@ -20,6 +20,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			data: { ...coordinate.data(), uid: coordinate.id },
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

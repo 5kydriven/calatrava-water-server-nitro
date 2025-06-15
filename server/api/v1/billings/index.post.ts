@@ -138,6 +138,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		});
 	} catch (error) {
 		console.error('Processing error:', error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

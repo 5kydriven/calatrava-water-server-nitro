@@ -51,6 +51,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			data: userRef,
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

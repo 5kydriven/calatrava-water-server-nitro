@@ -19,6 +19,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		return successResponse({ data: ledgers });
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

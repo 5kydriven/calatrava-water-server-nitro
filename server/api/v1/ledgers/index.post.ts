@@ -1,7 +1,7 @@
 import { getFirestore, Timestamp, WriteBatch } from 'firebase-admin/firestore';
 import { H3Event, readMultipartFormData } from 'h3';
-import pkg from 'papaparse';
 import generateSearchKeywords from '~/utils/searchKeyword';
+import pkg from 'papaparse';
 const { parse } = pkg;
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -85,6 +85,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		return successResponse({ message: 'Successfully added ledger' });
 	} catch (error) {
 		console.error(error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

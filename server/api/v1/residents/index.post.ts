@@ -6,6 +6,6 @@ export default defineEventHandler(async (event: H3Event) => {
 	const body = await readBody(event);
 	try {
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

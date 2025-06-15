@@ -18,6 +18,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		return successResponse({ data: reminders });
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

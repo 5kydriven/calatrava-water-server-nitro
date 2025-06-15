@@ -53,6 +53,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		return successResponse({ data: ledgers, total: countSnap.data().count });
 	} catch (error) {
 		console.log(error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

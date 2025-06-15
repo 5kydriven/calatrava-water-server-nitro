@@ -90,6 +90,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			error.statusCode || 500,
 			error.statusMessage || 'Internal Server Error',
 		);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

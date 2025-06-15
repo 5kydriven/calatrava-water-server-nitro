@@ -16,6 +16,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		return successResponse({ message: 'All notifications marked as read.' });
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

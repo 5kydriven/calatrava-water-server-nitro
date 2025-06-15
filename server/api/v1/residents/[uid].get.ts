@@ -20,6 +20,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			data: { ...residentSnapshot.data(), billings, uid: residentSnapshot.id },
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

@@ -31,6 +31,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		});
 	} catch (error: any) {
 		console.log('billings/[uid].get', error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

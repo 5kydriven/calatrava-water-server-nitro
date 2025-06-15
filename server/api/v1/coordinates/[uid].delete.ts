@@ -20,6 +20,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			data: docRef,
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

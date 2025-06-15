@@ -23,6 +23,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			total: count.data().count,
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

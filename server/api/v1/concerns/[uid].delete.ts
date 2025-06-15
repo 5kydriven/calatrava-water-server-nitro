@@ -13,6 +13,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			message: 'Successfully deleted concern',
 		});
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

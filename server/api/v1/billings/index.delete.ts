@@ -30,6 +30,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		});
 	} catch (error) {
 		console.error('Error deleting billings:', error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

@@ -23,6 +23,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
 		return successResponse({ data: announcements });
 	} catch (error: any) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

@@ -27,6 +27,6 @@ export default defineEventHandler(async (event: H3Event) => {
 			data: residentRef,
 		});
 	} catch (error) {
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

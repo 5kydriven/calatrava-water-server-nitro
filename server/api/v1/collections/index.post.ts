@@ -104,6 +104,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		return successResponse({ message: 'Successfully added collections' });
 	} catch (error) {
 		console.log(error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });

@@ -43,6 +43,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		});
 	} catch (error: any) {
 		console.error('Firestore Aggregation Error:', error);
-		return errorResponse(error);
+		return errorResponse({ error, event });
 	}
 });
