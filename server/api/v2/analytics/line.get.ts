@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
 				const result = await prisma.billing.aggregate({
 					where: {
 						bill_date: {
-							gte: startDate,
 							lte: endDate,
 						},
 					},

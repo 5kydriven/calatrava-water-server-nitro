@@ -1,13 +1,13 @@
 export function sendResponse<T>({
 	statusCode = 200,
 	event,
-	message,
+	message = 'Retrieved Successfully',
 	data,
 	meta,
 }: {
 	event: any;
 	statusCode?: number;
-	message: string;
+	message?: string;
 	data?: T;
 	meta?: ApiResponse<T>['meta'];
 }) {

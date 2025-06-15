@@ -145,9 +145,9 @@ model Concern {
   createdAt DateTime @default(now())
   name      String
   status    String
+  accountno String
 
-  resident    Resident? @relation(fields: [resident_id], references: [id])
-  resident_id String?
+  resident Resident? @relation(fields: [accountno], references: [id])
 }
 
 model Reminder {
