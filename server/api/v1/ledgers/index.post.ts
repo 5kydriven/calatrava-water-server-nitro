@@ -1,8 +1,6 @@
 import { getFirestore, Timestamp, WriteBatch } from 'firebase-admin/firestore';
 import { H3Event, readMultipartFormData } from 'h3';
 import generateSearchKeywords from '~/utils/searchKeyword';
-import pkg from 'papaparse';
-const { parse } = pkg;
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
@@ -30,15 +28,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const csvData = file.data.toString('utf-8');
 
 		// Parse CSV into JSON
-		const { data, errors } = parse<any>(csvData, {
-			header: true,
-			skipEmptyLines: true,
-		});
-
-		if (errors.length > 0) {
-			console.error('CSV Parsing Errors:', errors);
-			return { status: 'error', message: 'Error parsing CSV' };
-		}
+		const data = parseCsvLedger(csvData);
 
 		console.log(`Parsed ${data.length} records.`);
 

@@ -1,7 +1,5 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event } from 'h3';
-import pkg from 'papaparse';
-const { parse } = pkg;
 import errorResponse from '~/utils/errorResponse';
 import successResponse from '~/utils/successResponse';
 import generateSearchKeywords from '~/utils/searchKeyword';
@@ -30,15 +28,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		}
 
 		const csvData = file.data.toString('utf-8');
-		const { data, errors } = parse<ResidentData>(csvData, {
-			header: true,
-			skipEmptyLines: true,
-		});
-
-		if (errors.length > 0) {
-			console.error('CSV Parsing Errors:', errors);
-			return { status: 'error', message: 'Error parsing CSV' };
-		}
+		const data = parseCsvBilling(csvData);
 
 		if (!data.length) {
 			return { status: 'error', message: 'Empty CSV file' };

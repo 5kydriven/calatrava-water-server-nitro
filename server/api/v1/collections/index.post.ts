@@ -1,8 +1,6 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { H3Event, readMultipartFormData } from 'h3';
-import pkg from 'papaparse';
 import generateSearchKeywords from '~/utils/searchKeyword';
-const { parse } = pkg;
 
 export default defineEventHandler(async (event: H3Event) => {
 	const MAX_BATCH_OPERATIONS = 450;
@@ -22,15 +20,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		const csvData = file.data.toString('utf-8');
 
 		// Parse CSV into JSON
-		const { data, errors } = parse(csvData, {
-			header: true,
-			skipEmptyLines: true,
-		});
-
-		if (errors.length > 0) {
-			console.error('CSV Parsing Errors:', errors);
-			return { status: 'error', message: 'Error parsing CSV' };
-		}
+		const data = parseCsvCollection(csvData);
 
 		// Batch Firestore Writes (limit: 500 per batch)
 		const chunkSize = Math.floor(MAX_BATCH_OPERATIONS / 3); // since you do 2 updates + 1 set
