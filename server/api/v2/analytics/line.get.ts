@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
 				const result = await prisma.billing.aggregate({
 					where: {
 						bill_date: {
+							gte: startDate,
 							lte: endDate,
 						},
 					},
@@ -32,6 +33,8 @@ export default defineEventHandler(async (event) => {
 				};
 			}),
 		);
+
+		console.log(results);
 		return sendResponse({
 			event,
 			message: 'Retrieved Successfully',
