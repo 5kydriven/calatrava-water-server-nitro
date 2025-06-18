@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { H3Event } from 'h3';
+import { getMonthDateRange } from '~/utils/dateRange';
 import { prisma } from '~~/prisma/client';
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -8,19 +9,37 @@ export default defineEventHandler(async (event: H3Event) => {
 	const page = Number(query.page) || 1;
 	const limit = Number(query.limit) || 10;
 	const search = query.q?.toString();
+	const month = query.month.toString();
 
-	const where: Prisma.LedgerWhereInput = {
-		...(search && {
-			OR: [
-				{
-					accountno: {
-						contains: search,
-						mode: 'insensitive' as Prisma.QueryMode,
-					},
-				},
-			],
-		}),
+	const { startDate, endDate } = getMonthDateRange(month);
+
+	const where: any = {
+		AND: [
+			...(search
+				? [
+						{
+							OR: [
+								{
+									accountno: {
+										contains: search,
+										mode: 'insensitive',
+									},
+								},
+							],
+						},
+				  ]
+				: []),
+		],
 	};
+
+	if (month) {
+		where.AND.push({
+			trans_date: {
+				gte: startDate,
+				lte: endDate,
+			},
+		});
+	}
 
 	const [ledgers, total] = await Promise.all([
 		prisma.ledger.findMany({

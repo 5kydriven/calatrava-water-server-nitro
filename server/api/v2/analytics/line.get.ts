@@ -34,7 +34,6 @@ export default defineEventHandler(async (event) => {
 			}),
 		);
 
-		console.log(results);
 		return sendResponse({
 			event,
 			message: 'Retrieved Successfully',

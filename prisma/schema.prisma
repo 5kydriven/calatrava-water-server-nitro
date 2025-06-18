@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Resident {
-  id                 String        @id @default(uuid())
+  id                 String        @id @unique
   accountno          String        @unique
   classtype          String
   createdAt          DateTime      @default(now())
@@ -69,8 +69,7 @@ model Billing {
   paymentStatus  String?
   paymentDate    String?
 
-  resident    Resident? @relation(fields: [resident_id], references: [id])
-  resident_id String?
+  resident Resident? @relation(fields: [accountno], references: [id])
 }
 
 model Collection {
@@ -115,8 +114,7 @@ model Collection {
   trackdt       String
   waterbill     String
 
-  resident    Resident? @relation(fields: [resident_id], references: [id])
-  resident_id String?
+  resident Resident? @relation(fields: [accountno], references: [id])
 }
 
 model Ledger {
@@ -134,8 +132,7 @@ model Ledger {
   timestamp   String
   trans_date  String
 
-  resident    Resident? @relation(fields: [resident_id], references: [id])
-  resident_id String?
+  resident Resident? @relation(fields: [accountno], references: [id])
 }
 
 model Concern {
@@ -173,7 +170,7 @@ model Anouncement {
   resident_id String?
 }
 
-model faq {
+model Faq {
   id        String   @id @default(uuid())
   answer    String
   question  String

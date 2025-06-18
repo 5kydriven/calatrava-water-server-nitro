@@ -56,7 +56,6 @@ export default defineEventHandler(async (event: H3Event) => {
 				Number(item.waterusage) > 10 ? Number(item.waterusage) * 0.25 : 0;
 
 			return {
-				resident_id: item.accountno,
 				accountno: item.accountno,
 				fullname: item.fullname.toLowerCase(),
 				book: item.book.toLowerCase(),

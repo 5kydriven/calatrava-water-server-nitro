@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { getMonthDateRange } from '~/utils/dateRange';
 import { prisma } from '~~/prisma/client';
 
 export default defineEventHandler(async (event) => {
@@ -7,25 +8,43 @@ export default defineEventHandler(async (event) => {
 	const page = Number(query.page) || 1;
 	const limit = Number(query.limit) || 10;
 	const search = query.q?.toString();
+	const month = query.month.toString();
 
-	const where: Prisma.BillingWhereInput = {
-		...(search && {
-			OR: [
-				{
-					fullname: {
-						contains: search,
-						mode: 'insensitive' as Prisma.QueryMode,
-					},
-				},
-				{
-					accountno: {
-						contains: search,
-						mode: 'insensitive' as Prisma.QueryMode,
-					},
-				},
-			],
-		}),
+	const { startDate, endDate } = getMonthDateRange(month);
+
+	const where: any = {
+		AND: [
+			...(search
+				? [
+						{
+							OR: [
+								{
+									fullname: {
+										contains: search,
+										mode: 'insensitive',
+									},
+								},
+								{
+									accountno: {
+										contains: search,
+										mode: 'insensitive',
+									},
+								},
+							],
+						},
+				  ]
+				: []),
+		],
 	};
+
+	if (month) {
+		where.AND.push({
+			bill_date: {
+				gte: startDate,
+				lte: endDate,
+			},
+		});
+	}
 
 	const [billings, total] = await Promise.all([
 		prisma.billing.findMany({
