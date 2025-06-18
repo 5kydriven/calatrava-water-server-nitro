@@ -26,8 +26,7 @@ export default defineEventHandler(async (event: H3Event) => {
 		}
 
 		const file = formData.find((item) => item.name === 'file');
-		console.log(file);
-		if (!file?.data || !file.filename?.endsWith('.csv')) {
+		if (!file?.data || !file.filename) {
 			throw createError({
 				statusCode: 400,
 				statusMessage: 'Bad Request',

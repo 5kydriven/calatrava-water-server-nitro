@@ -7,12 +7,20 @@ export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
 	const formData = await readMultipartFormData(event);
 	if (!formData) {
-		return { status: 'error', message: 'No file uploaded' };
+		throw createError({
+			statusCode: 400,
+			statusMessage: 'Bad Request',
+			message: 'No file uploaded',
+		});
 	}
 
 	const file = formData.find((item) => item.name === 'file');
 	if (!file || !file.filename) {
-		return { status: 'error', message: 'Invalid file' };
+		throw createError({
+			statusCode: 400,
+			statusMessage: 'Bad Request',
+			message: 'Invalid file',
+		});
 	}
 
 	try {
