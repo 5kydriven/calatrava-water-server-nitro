@@ -18,18 +18,30 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const formData = await readMultipartFormData(event);
 		if (!formData?.length) {
-			return { status: 'error', message: 'No file uploaded' };
+			throw createError({
+				statusCode: 400,
+				statusMessage: 'Bad Request',
+				message: 'No file uploaded',
+			});
 		}
 
 		const file = formData.find((item) => item.name === 'file');
 		if (!file?.data || !file.filename?.endsWith('.csv')) {
-			return { status: 'error', message: 'Invalid file' };
+			throw createError({
+				statusCode: 400,
+				statusMessage: 'Bad Request',
+				message: 'Invalid file',
+			});
 		}
 
 		const csvData = file.data.toString('utf-8');
 		const data = parseCsvBilling(csvData);
 		if (!data.length) {
-			return { status: 'error', message: 'Empty CSV file' };
+			throw createError({
+				statusCode: 400,
+				statusMessage: 'Bad Request',
+				message: 'Empty CSV file',
+			});
 		}
 
 		const uniqueBooks = new Set<string>();
