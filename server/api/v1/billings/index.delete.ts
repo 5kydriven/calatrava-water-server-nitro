@@ -6,14 +6,20 @@ import successResponse from '~/utils/successResponse';
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
 	const billings = await readBody(event);
-
+	if (!billings) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: 'Bad Request',
+			message: 'Required body',
+		});
+	}
 	try {
 		const batch = db.batch();
 
 		billings.forEach((item: any) => {
 			const subBillingRef = db
 				.collection('residents')
-				.doc(item.residentUid)
+				.doc(item.residentId)
 				.collection('billings')
 				.doc(item.uid);
 
