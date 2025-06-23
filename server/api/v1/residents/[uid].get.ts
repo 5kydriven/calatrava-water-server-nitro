@@ -7,15 +7,19 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		const residentRef = db.collection('residents').doc(uid);
 		const residentSnapshot = await residentRef.get();
-		const residentBillings = await residentRef
-			.collection('billings')
-			.orderBy('createdAt', 'desc')
-			.get();
+		const residentBillings = await residentRef.collection('billings').get();
 
-		const billings = residentBillings.docs.map((doc) => ({
-			uid: doc.id,
-			...doc.data(),
-		}));
+		const billings = residentBillings.docs
+			.map((doc: any) => ({
+				uid: doc.id,
+				...doc.data(),
+			}))
+			.sort((a, b) => {
+				const dateA = new Date(a.bill_date);
+				const dateB = new Date(b.bill_date);
+				return dateB.getTime() - dateA.getTime();
+			});
+
 		return successResponse({
 			data: { ...residentSnapshot.data(), billings, uid: residentSnapshot.id },
 		});
