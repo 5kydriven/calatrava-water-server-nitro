@@ -16,6 +16,7 @@ model Resident {
   notification_token String?
   book               String
   createdAt          DateTime      @default(now())
+  isPlaceholder      Boolean       @default(false)
   announcements      Anouncement[]
   billings           Billing[]
   collections        Collection[]
