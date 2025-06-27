@@ -1,0 +1,26 @@
+declare
+  item jsonb;
+begin
+  for item in select value from jsonb_array_elements(resident_data) as t(value)
+  loop
+    insert into "Resident" (
+      id,
+      accountno,
+      fullname,
+      book,
+      classtype
+    )
+    values (
+      item->>'id',
+      item->>'accountno',
+      item->>'fullname',
+      item->>'book',
+      item->>'classtype'
+    )
+    on conflict (id) do update set
+      accountno = excluded.accountno,
+      fullname = excluded.fullname,
+      book = excluded.book,
+      classtype = excluded.classtype;
+  end loop;
+end;

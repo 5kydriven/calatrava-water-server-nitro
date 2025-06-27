@@ -9,23 +9,23 @@ datasource db {
 }
 
 model Resident {
-  id                 String        @id @unique
+  id                 String        @id @unique @default(dbgenerated("gen_random_uuid()"))
   accountno          String        @unique
   classtype          String
-  createdAt          DateTime      @default(now())
   fullname           String
   notification_token String?
   book               String
+  createdAt          DateTime      @default(now())
+  announcements      Anouncement[]
   billings           Billing[]
   collections        Collection[]
-  ledgers            Ledger[]
   concerns           Concern[]
   reminders          Reminder[]
-  announcements      Anouncement[]
+  ledgers            Ledger[]
 }
 
 model Billing {
-  id             String   @id @default(uuid())
+  id             String   @id @unique @default(dbgenerated("gen_random_uuid()"))
   accountno      String
   amortamnt      String
   arrearsamt     String
@@ -33,12 +33,10 @@ model Billing {
   b_status       String
   bill_date      String
   bill_no        String
-  billamnt       Float
   billbrgy       String
   billpurok      String
   book           String
   classtype      String
-  createdAt      DateTime @default(now())
   curreading     String
   custno         String
   discon_date    String
@@ -65,18 +63,18 @@ model Billing {
   totalBill      Float
   verified       String
   waterusage     String
+  billamnt       Float
+  createdAt      DateTime @default(now())
   environmentFee Float
-  paymentStatus  String?
   paymentDate    String?
-
-  resident Resident? @relation(fields: [accountno], references: [id])
+  paymentStatus  String?
+  resident       Resident @relation(fields: [accountno], references: [accountno])
 }
 
 model Collection {
-  id            String   @id @default(uuid())
+  id            String   @id @unique @default(dbgenerated("gen_random_uuid()"))
   accountno     String
   amortize      String
-  arrearsamt    String
   arrearsenv    String
   bankgroup     String
   bankid        String
@@ -89,12 +87,10 @@ model Collection {
   checkdate     String
   checkno       String
   cmrrfamnt     String
-  createdAt     DateTime @default(now())
   custno        String
   envfee        String
   fullname      String
   onlineref     String
-  othrapply     String
   othrincome    String
   othrreconn    String
   pacyamnt      String
@@ -113,16 +109,17 @@ model Collection {
   teller        String
   trackdt       String
   waterbill     String
-
-  resident Resident? @relation(fields: [accountno], references: [id])
+  arrearsamt    String
+  createdAt     DateTime @default(now())
+  othrapply     String
+  resident      Resident @relation(fields: [accountno], references: [accountno])
 }
 
 model Ledger {
-  id          String   @id @default(uuid())
-  accountno   String
+  id          String    @id @unique @default(dbgenerated("gen_random_uuid()"))
+  accountno   String?
   amount      String
   consumption String
-  createdAt   DateTime @default(now())
   custno      String
   reading     String
   ref_code    String
@@ -131,43 +128,41 @@ model Ledger {
   tag         String
   timestamp   String
   trans_date  String
-
-  resident Resident? @relation(fields: [accountno], references: [id])
+  createdAt   DateTime  @default(now())
+  Resident    Resident? @relation(fields: [accountno], references: [accountno])
 }
 
 model Concern {
-  id        String   @id @default(uuid())
-  area      String
-  content   String
-  createdAt DateTime @default(now())
-  name      String
-  status    String
-  accountno String
-
-  resident Resident? @relation(fields: [accountno], references: [id])
+  id         String   @id @default(uuid())
+  area       String
+  content    String
+  name       String
+  status     String
+  accountno  String
+  createdAt  DateTime @default(now())
+  residentId String
+  resident   Resident @relation(fields: [residentId], references: [id])
 }
 
 model Reminder {
-  id        String   @id @default(uuid())
-  content   String
-  dueDate   String
-  createdAt DateTime @default(now())
-  name      String
-
-  Resident    Resident? @relation(fields: [resident_id], references: [id])
-  resident_id String?
+  id         String   @id @default(uuid())
+  content    String
+  dueDate    String
+  name       String
+  createdAt  DateTime @default(now())
+  residentId String
+  Resident   Resident @relation(fields: [residentId], references: [id])
 }
 
 model Anouncement {
-  id        String   @id @default(uuid())
-  content   String
-  dueDate   String
-  type      String
-  target    String
-  createdAt DateTime @default(now())
-
-  Resident    Resident? @relation(fields: [resident_id], references: [id])
-  resident_id String?
+  id         String   @id @default(uuid())
+  content    String
+  dueDate    String
+  type       String
+  target     String
+  createdAt  DateTime @default(now())
+  residentId String
+  Resident   Resident @relation(fields: [residentId], references: [id])
 }
 
 model Faq {

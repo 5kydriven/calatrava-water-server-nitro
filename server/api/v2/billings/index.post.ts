@@ -37,7 +37,6 @@ export default defineEventHandler(async (event: H3Event) => {
 		const residents = data
 			.filter((d) => d.accountno && d.fullname && d.book)
 			.map((d) => ({
-				id: d.accountno,
 				accountno: d.accountno,
 				fullname: d.fullname.toLowerCase(),
 				book: d.book.toLowerCase(),
