@@ -3,6 +3,7 @@ import { Database } from '~~/types/database.types';
 
 const config = useRuntimeConfig();
 const supabaseUrl = config.supabaseUrl;
-const supabaseRoleKey = config.supabaseRoleKey;
+const supabaseKey = config.supabaseKey;
+// const supabaseRoleKey = config.supabaseRoleKey;
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseRoleKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
