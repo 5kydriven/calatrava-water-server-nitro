@@ -1,3 +1,4 @@
+import { supabase } from '~~/server/utils/supabase';
 //https://nitro.unjs.io/config
 export default defineNitroConfig({
 	srcDir: 'server',
@@ -15,6 +16,7 @@ export default defineNitroConfig({
 		clientX509CertUrl: process.env.NITRO_CLIENT_X509_CERT_URL,
 		universeDomain: process.env.NITRO_UNIVERSE_DOMAIN,
 		supabaseUrl: process.env.NITRO_SUPABASE_URL,
+		supabaseKey: process.env.NITRO_SUPABASE_KEY,
 		supabaseRoleKey: process.env.NITRO_SUPABASE_ROLE_KEY,
 	},
 	// routeRules: {
