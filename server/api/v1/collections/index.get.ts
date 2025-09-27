@@ -3,7 +3,7 @@ import { H3Event } from 'h3';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { q, month, active, offset = 0 } = getQuery(event);
+	const { q, month, active, offset = 0, orderBy = 'createdAt', order = 'desc' } = getQuery(event);
 
 	if (!month) {
 		throw createError({
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event: H3Event) => {
 	try {
 		let collectionsQuery = db
 			.collection('collections')
-			.orderBy('createdAt', 'asc');
+			.orderBy(orderBy as string, order as any);
 
 		if (month) {
 			const [year, monthNum] = (month as string).split('-'); // Split "2025-3" into ["2025", "3"]
