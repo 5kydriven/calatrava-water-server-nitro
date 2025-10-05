@@ -3,7 +3,7 @@ import { H3Event } from 'h3';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { q, month, active, offset = 0, orderBy = 'createdAt', order = 'desc' } = getQuery(event);
+	const { q, month, offset = 0, orderBy = 'createdAt', order = 'desc' } = getQuery(event);
 
 	if (!month) {
 		throw createError({
