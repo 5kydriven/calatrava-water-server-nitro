@@ -5,7 +5,8 @@
 		"dev": "nitro dev",
 		"prepare": "nitro prepare",
 		"preview": "node .output/server/index.mjs",
-		"postinstall": "prisma generate"
+		"postinstall": "prisma generate",
+		"emulator": "firebase emulators:start --import=./firebase-emulator-data --export-on-exit"
 	},
 	"devDependencies": {
 		"nitropack": "latest"
