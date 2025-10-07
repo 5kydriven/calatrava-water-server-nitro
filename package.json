@@ -9,7 +9,8 @@
 		"emulator": "firebase emulators:start --import=./firebase-emulator-data --export-on-exit"
 	},
 	"devDependencies": {
-		"nitropack": "latest"
+		"nitropack": "latest",
+		"supabase": "^2.48.3"
 	},
 	"dependencies": {
 		"@prisma/client": "^6.9.0",
