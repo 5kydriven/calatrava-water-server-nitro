@@ -2,7 +2,7 @@ import { initializeApp, cert, getApp } from "firebase-admin/app";
 import type { App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
-export default function initFirebase(firebaseConfig: any): { app: any, db: any } | App {
+export default function initFirebase(firebaseConfig: any): { db: any } | App {
   let app: any;
 
   // Check for emulator mode (works for Firestore, Auth, etc.)
@@ -32,6 +32,6 @@ export default function initFirebase(firebaseConfig: any): { app: any, db: any }
     const db = getFirestore(app);
 
     // Optionally attach to global or return
-    return { app, db };
+    return { db };
   }
 }

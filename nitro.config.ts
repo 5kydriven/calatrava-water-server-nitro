@@ -1,4 +1,3 @@
-import { supabase } from '~~/server/utils/supabase';
 //https://nitro.unjs.io/config
 export default defineNitroConfig({
 	srcDir: 'server',
