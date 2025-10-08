@@ -1,12 +1,5 @@
 import initFirebase from '~/utils/initFirebase';
 
-// Extend NitroApp type to include 'db'
-declare module 'nitropack' {
-  interface NitroApp {
-	db?: any;
-  }
-}
-
 export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
 	const firebaseConfig = {
