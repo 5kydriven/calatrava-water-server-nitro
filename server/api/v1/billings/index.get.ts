@@ -6,7 +6,7 @@ import errorResponse from '~/utils/errorResponse';
 
 export default defineEventHandler(async (event: H3Event) => {
 	const db = getFirestore();
-	const { q, month, active, offset = 0 } = getQuery(event);
+	const { q, month, offset = 0, orderBy = 'createdAt', order = 'desc' } = getQuery(event);
 
 	if (!month) {
 		throw createError({
