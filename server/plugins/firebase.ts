@@ -1,6 +1,6 @@
 import initFirebase from '~/utils/initFirebase';
 
-export default defineNitroPlugin((nuxtapp) => {
+export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
 	const firebaseConfig = {
 		type: 'service_account',
@@ -15,5 +15,12 @@ export default defineNitroPlugin((nuxtapp) => {
 		client_x509_cert_url: config.clientX509CertUrl,
 		universe_domain: config.universeDomain,
 	};
-	initFirebase(firebaseConfig);
+	
+	const firebaseInstance = initFirebase(firebaseConfig);
+	if ('app' in firebaseInstance && 'db' in firebaseInstance) {
+		// Attach firebase instance directly to nitroApp
+		(nitroApp as any).firebase = { app: firebaseInstance.app, db: firebaseInstance.db };
+	} else {
+		(nitroApp as any).firebase = { app: firebaseInstance, db: undefined };
+	}
 });

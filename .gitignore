@@ -9,3 +9,9 @@ service-account.json
 service-account-v2.json
 /generated/prisma
 .env.local
+
+# Firebase related
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+firestore-debug.*.log
