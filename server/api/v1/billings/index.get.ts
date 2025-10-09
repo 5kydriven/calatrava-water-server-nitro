@@ -1,9 +1,9 @@
-import { H3Event, use } from "h3";
+import { getFirestore } from "firebase-admin/firestore";
+import { H3Event } from "h3";
 import errorResponse from "~/utils/errorResponse";
 
 export default defineEventHandler(async (event: H3Event) => {
-  const nitroApp = useNitroApp();
-  const db = nitroApp?.firebase.db;
+  const db = getFirestore();
 
   const {
     q,

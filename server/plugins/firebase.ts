@@ -23,6 +23,5 @@ export default defineNitroPlugin((nitroApp) => {
 		universe_domain: config.universeDomain,
 	};
 	
-	const firebaseInstance = initFirebase(firebaseConfig);
-			nitroApp.db = firebaseInstance.db || null;
+	initFirebase(firebaseConfig);
 });

@@ -1,8 +1,7 @@
 import { initializeApp, cert, getApp } from "firebase-admin/app";
-import type { App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
-export default function initFirebase(firebaseConfig: any): { db: any } | App {
+export default function initFirebase(firebaseConfig: any) {
   let app: any;
 
   // Check for emulator mode (works for Firestore, Auth, etc.)
@@ -17,21 +16,15 @@ export default function initFirebase(firebaseConfig: any): { db: any } | App {
     if (isEmulator) {
       // Minimal init for emulator—no credentials needed
       console.log("Initializing Firebase Admin SDK for emulator");
-      app = initializeApp({
+      return initializeApp({
         projectId: firebaseConfig.project_id,
       });
     } else {
       // Full init for production
       console.log("Initializing Firebase Admin SDK for production");
-      app = initializeApp({
+     return initializeApp({
         credential: cert(firebaseConfig),
       });
     }
-
-    // Initialize and export services (e.g., Firestore)
-    const db = getFirestore(app);
-
-    // Optionally attach to global or return
-    return { db };
   }
 }
