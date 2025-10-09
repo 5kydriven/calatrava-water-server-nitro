@@ -1,4 +1,4 @@
-import initFirebase from '~/utils/initFirebase';
+import initFirebase, { FirebaseAdmin } from '~/utils/initFirebase';
 
 export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
@@ -16,5 +16,7 @@ export default defineNitroPlugin((nitroApp) => {
 		universe_domain: config.universeDomain,
 	};
 	
-	initFirebase(firebaseConfig);
+	const firebaseInstance: FirebaseAdmin = initFirebase(firebaseConfig);
+	nitroApp.db = firebaseInstance.db;
+	nitroApp.auth = firebaseInstance.auth;
 });
