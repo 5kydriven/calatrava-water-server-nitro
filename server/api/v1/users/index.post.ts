@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
             await auth.setCustomUserClaims(userRecord.uid, customClaims);
         }
 
-        return userRecord;
+        return successResponse({data: userRecord})
     } catch (error) {
-        console.error(error);
+        return errorResponse({error, event})
     }
 })
