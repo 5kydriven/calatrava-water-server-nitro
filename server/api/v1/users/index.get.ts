@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName,
-        role: user.customClaims?.role || null,
+        customClaims: user.customClaims || null,
     }));
 
     return successResponse({data: userRecords});
