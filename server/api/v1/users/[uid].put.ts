@@ -6,14 +6,14 @@ export default defineEventHandler(async (event) => {
   try {
     const { uid } = event.context.params as { uid: string };
     const { customClaims, ...updates } = await readBody(event);
+    const userRecord = await auth.updateUser(uid, updates);
 
-    return await auth.updateUser(uid, updates).then(async (userRecord) => {
-      if (customClaims && Object.keys(customClaims).length > 0) {
-        await auth.setCustomUserClaims(uid, customClaims);
-      }
-      return userRecord;
-    });
+    if (customClaims) {
+      await auth.setCustomUserClaims(uid, customClaims);
+    }
+
+    return successResponse({ data: userRecord });
   } catch (error) {
-    console.error(error);
+    return errorResponse({ error, event });
   }
 });
