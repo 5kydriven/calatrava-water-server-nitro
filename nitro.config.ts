@@ -16,7 +16,6 @@ export default defineNitroConfig({
 		universeDomain: process.env.NITRO_UNIVERSE_DOMAIN,
 		supabaseUrl: process.env.NITRO_SUPABASE_URL,
 		supabaseKey: process.env.NITRO_SUPABASE_KEY,
-		supabaseRoleKey: process.env.NITRO_SUPABASE_ROLE_KEY || '',
 	},
 	// routeRules: {
 	// 	'/api/**': {
