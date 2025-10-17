@@ -22,7 +22,10 @@ export default defineEventHandler(async (event: H3Event) => {
   }
 
   try {
-    let billingsQuery = db.collection("billings").orderBy("book", "asc");
+    // ensure orderBy and order are strings to satisfy Firestore typings
+    let billingsQuery = db
+      .collection("billings")
+      .orderBy(String(orderBy), String(order) as any);
 
     if (month) {
       const [year, monthNum] = (month as string).split("-"); // Split "2025-3" into ["2025", "3"]
@@ -40,12 +43,8 @@ export default defineEventHandler(async (event: H3Event) => {
         .where("bill_date", "<=", endDate);
     }
 
-    if (q) {
-      billingsQuery = billingsQuery.where(
-        "searchKeywords",
-        "array-contains",
-        q
-      );
+     if (q) {
+      billingsQuery = billingsQuery.startAt(q).endAt(q + "\uf8ff");
     }
 
     const countSnap = await billingsQuery.count().get();
