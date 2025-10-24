@@ -1,0 +1,58 @@
+
+# This is a file for you to write an un-named query.
+# Only one un-named query is allowed per file.
+query {
+  bills{
+    customer {
+      fullName
+      accountNo
+      purokCode
+      billPurok
+      billBrgy
+      classType
+    }
+    meter {
+      customer {
+        fullName
+        accountNo
+        purokCode
+        billPurok
+        billBrgy
+        classType
+      }
+      meterNo
+    }
+    period {
+      billDate
+      dueDate
+      prvDueDate
+      prvBillDate
+    }
+    billNo
+    currentReading
+    previousReading
+    waterUsage
+    totalBill
+    billAmount
+    paid
+    status
+    previousUsed
+    previousUsed2
+    arrearsEnv
+    arrearsAmount
+    mPenalty
+    duePenalty
+    environmentFee
+    nrWater
+    createdAt
+    book
+    prvDiscon
+    disconDate
+    verified
+    stubOut
+    mrSysNo
+    amortAmount
+    mrrfDue
+    penalty
+  }
+}
