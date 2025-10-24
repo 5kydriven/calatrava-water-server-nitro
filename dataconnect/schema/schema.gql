@@ -1,0 +1,59 @@
+type Customer @table {
+  fullName: String!
+  accountNo: String!
+  purokCode: String
+  billPurok: String
+  billBrgy: String
+  classType: String
+}
+
+type Meter @table {
+  customer: Customer!
+  meterNo: String!
+}
+
+type BillingPeriod @table {
+  billDate: Date!
+  dueDate: Date!
+  prvDueDate: Date
+  prvBillDate: Date
+}
+
+type Bill @table {
+  customer: Customer!
+  meter: Meter!
+  period: BillingPeriod!
+  billNo: String!
+  currentReading: Int!
+  previousReading: Int!
+  waterUsage: Int!
+  totalBill: Float!
+  billAmount: Float!
+  paid: Boolean!
+  status: String!
+  previousUsed: Int
+  previousUsed2: Int
+  arrearsEnv: Float
+  arrearsAmount: Float
+  mPenalty: Float
+  duePenalty: Float
+  environmentFee: Float
+  nrWater: Int
+  createdAt: Timestamp
+  book: String
+  prvDiscon: Date
+  disconDate: Date
+  verified: Boolean
+  stubOut: String
+  mrSysNo: String
+  amortAmount: Float
+  mrrfDue: Float
+  penalty: Float
+}
+
+type Payment @table {
+  bill: Bill!
+  paymentDate: Date!
+  paymentReceipt: String!
+  paymentStatus: String
+}

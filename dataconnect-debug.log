@@ -1,0 +1,25 @@
+I1024 11:29:04.976690   15492 load.go:31] Reloading schema and connectors...
+I1024 11:29:05.051459   15492 control.go:94] [/emulator/calatrava-water-system ab08] UpdateResources(): done
+Main schema: sources: schema\schema.gql [1016B] 
+Connector "example": sources: 
+E1024 11:29:05.095327   15492 load.go:95] Errors generating SDK: [connector "example"]: invalid Data Connect Connector no query found in connector
+I1024 11:29:05.098762   15492 collector.go:107] schema extensions wrote into "D:\\projects_2025\\cws-project\\server\\dataconnect\\.dataconnect\\schema"
+Generated sources: prelude.gql [73219B] main\mutation.gql [17040B] main\implicit.gql [2488B] main\input.gql [73981B] main\relation.gql [40255B] main\query.gql [6323B] 
+I1024 11:29:05.099762   15492 load.go:109] Finished reloading
+I1024 11:29:05.103821   15492 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:9399
+I1024 11:29:05.104854   15492 dev.go:102] Listening on address (HTTP + gRPC): [::1]:9399
+I1024 11:29:16.310771   15492 migrate.go:24] Running migration SQL:
+Step 1: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+Step 2: CREATE TABLE "public"."customer" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "account_no" text NOT NULL, "bill_brgy" text NULL, "bill_purok" text NULL, "class_type" text NULL, "full_name" text NOT NULL, "purok_code" text NULL, PRIMARY KEY ("id"))
+Step 3: CREATE TABLE "public"."meter" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "customer_id" uuid NOT NULL, "meter_no" text NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "meter_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "public"."customer" ("id") ON DELETE CASCADE)
+Step 4: CREATE INDEX "meter_customerId_idx" ON "public"."meter" ("customer_id")
+Step 5: CREATE TABLE "public"."billing_period" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "bill_date" date NOT NULL, "due_date" date NOT NULL, "prv_bill_date" date NULL, "prv_due_date" date NULL, PRIMARY KEY ("id"))
+Step 6: CREATE TABLE "public"."bill" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "customer_id" uuid NOT NULL, "meter_id" uuid NOT NULL, "period_id" uuid NOT NULL, "amort_amount" double precision NULL, "arrears_amount" double precision NULL, "arrears_env" double precision NULL, "bill_amount" double precision NOT NULL, "bill_no" text NOT NULL, "book" text NULL, "created_at" timestamptz NULL, "current_reading" integer NOT NULL, "discon_date" date NULL, "due_penalty" double precision NULL, "environment_fee" double precision NULL, "m_penalty" double precision NULL, "mr_sys_no" text NULL, "mrrf_due" double precision NULL, "nr_water" integer NULL, "paid" boolean NOT NULL, "penalty" double precision NULL, "previous_reading" integer NOT NULL, "previous_used" integer NULL, "previous_used2" integer NULL, "prv_discon" date NULL, "status" text NOT NULL, "stub_out" text NULL, "total_bill" double precision NOT NULL, "verified" boolean NULL, "water_usage" integer NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "bill_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "public"."customer" ("id") ON DELETE CASCADE, CONSTRAINT "bill_meter_id_fkey" FOREIGN KEY ("meter_id") REFERENCES "public"."meter" ("id") ON DELETE CASCADE, CONSTRAINT "bill_period_id_fkey" FOREIGN KEY ("period_id") REFERENCES "public"."billing_period" ("id") ON DELETE CASCADE)
+Step 7: CREATE INDEX "bill_customerId_idx" ON "public"."bill" ("customer_id")
+Step 8: CREATE INDEX "bill_meterId_idx" ON "public"."bill" ("meter_id")
+Step 9: CREATE INDEX "bill_periodId_idx" ON "public"."bill" ("period_id")
+Step 10: CREATE TABLE "public"."payment" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "bill_id" uuid NOT NULL, "payment_date" date NOT NULL, "payment_receipt" text NOT NULL, "payment_status" text NULL, PRIMARY KEY ("id"), CONSTRAINT "payment_bill_id_fkey" FOREIGN KEY ("bill_id") REFERENCES "public"."bill" ("id") ON DELETE CASCADE)
+Step 11: CREATE INDEX "payment_billId_idx" ON "public"."payment" ("bill_id")
+I1024 11:29:16.732866   15492 control.go:94] [/emulator/calatrava-water-system eaa8] UpdateResources(): done
+Main schema: sources: schema\schema.gql [1016B] 
+Connector "example": sources: 

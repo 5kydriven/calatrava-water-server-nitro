@@ -1,0 +1,245 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "billings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "bill_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "totalBill",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "billings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "book",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "bill_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "billings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchKeywords",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "book",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "bill_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "collections",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "accountno",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "collections",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "pymtdate",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "collections",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchKeywords",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "pymtdate",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "collections",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "sysno",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "pymtdate",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "ledgers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "accountno",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "ledgers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchKeywords",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "trans_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "ledgers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "trans_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "reminders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "residentUid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "residents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchKeywords",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "fullname",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    }
+  ],
+  "fieldOverrides": []
+}
